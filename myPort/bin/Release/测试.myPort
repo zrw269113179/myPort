@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<setup>
+  <dataformat format="True" />
+  <serial baud="9600" com="COM9" />
+  <recList>
+    <rec recName="接收数据" recIsShow="True" />
+  </recList>
+  <parsingList>
+    <parsing parsingName="a" parsingStr="FB 01 %接收数据 %接收数据 %接收数据 %接收数据 %a FC" parsingCmd="True" parsingCmdName="回复" />
+    <parsing parsingName="" parsingStr="" parsingCmd="False" parsingCmdName="" />
+  </parsingList>
+  <sendList>
+    <send sendName="设置数据" sendValue="1234" />
+  </sendList>
+  <cmdList>
+    <cmd cmdName="回复" cmdStr="FC 81 %设置数据 %设置数据 %chksum(1,3) FB" time="1000" timerNeed="False" />
+    <cmd cmdName="" cmdStr="" time="1000" timerNeed="False" />
+  </cmdList>
+</setup>

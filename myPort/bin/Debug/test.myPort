@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<setup>
+  <dataformat format="True" />
+  <recList>
+    <rec recName="a" recIsShow="False" />
+  </recList>
+  <parsingList>
+    <parsing parsingName="abc" parsingStr="AA %a" parsingCmd="True" parsingCmdName="re" />
+  </parsingList>
+  <sendList>
+    <send sendName="a" sendValue="1234" />
+  </sendList>
+  <cmdList>
+    <cmd cmdName="123" cmdStr="AA %a %a" />
+  </cmdList>
+</setup>
