@@ -1,4 +1,6 @@
-﻿using Microsoft.Win32;
+﻿using IronPython.Hosting;
+using Microsoft.Scripting.Hosting;
+using Microsoft.Win32;
 using Sunny.UI;
 using System;
 using System.Collections.Generic;
@@ -7,7 +9,10 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
@@ -25,6 +30,7 @@ namespace myPort
         public Form1()
         {
             InitializeComponent();
+            串口ToolStripMenuItem_Click(null,new EventArgs());
             GetComList();
 
 
@@ -120,6 +126,40 @@ namespace myPort
                     低位在前ToolStripMenuItem.Checked = false;
                 }
             }
+            XmlNode scriptNode = root.SelectSingleNode("script");//取仅有的一个元素
+            if (scriptNode != null)
+            {
+                XmlElement script = (XmlElement)scriptNode;//为了可以使用属性存储信息，我们把XmlNode转化为XmlElement。
+                if (script.GetAttribute("needScript") == "False")
+                {
+                    needScript = false;
+                    禁止加载ToolStripMenuItem.Checked = true;
+                }
+                else
+                {
+                    needScript = true;
+                    禁止加载ToolStripMenuItem.Checked = false;
+                }
+
+                scriptPath = script.GetAttribute("path");
+                if (scriptPath != null)
+                {
+                    if(!string.IsNullOrEmpty(scriptPath))
+                    {
+                        try
+                        {
+                            ScriptEngine pyEngine = Python.CreateEngine();//创建Python解释器对象
+                            pyScript = pyEngine.ExecuteFile(scriptPath);//读取脚本文件
+                        }
+                        catch (Exception exp)
+                        {
+                            MessageBox.Show(exp.Message);
+                        }
+                    }
+                    
+                    
+                }
+            }
 
             XmlNode serialNode = root.SelectSingleNode("serial");//取仅有的一个元素
             if (serialNode != null)
@@ -132,7 +172,39 @@ namespace myPort
                     cmbPort.Text = com;
                 }
             }
-
+            XmlNode tcpSerNode = root.SelectSingleNode("service");//取仅有的一个元素
+            if (tcpSerNode != null)
+            {
+                XmlElement tcpSer = (XmlElement)tcpSerNode;//为了可以使用属性存储信息，我们把XmlNode转化为XmlElement。
+                serIP.Text = tcpSer.GetAttribute("IP");
+                serPort.Text = tcpSer.GetAttribute("port");
+            }
+            XmlNode tcpCliNode = root.SelectSingleNode("client");//取仅有的一个元素
+            if (tcpCliNode != null)
+            {
+                XmlElement tcpCli = (XmlElement)tcpCliNode;//为了可以使用属性存储信息，我们把XmlNode转化为XmlElement。
+                tcpCliIP.Text = tcpCli.GetAttribute("IP");
+                tcpCliPort.Text = tcpCli.GetAttribute("port");
+            }
+            XmlNode portChooseNode = root.SelectSingleNode("portChoose");//取仅有的一个元素
+            if (portChooseNode != null)
+            {
+                XmlElement portChoose = (XmlElement)portChooseNode;//为了可以使用属性存储信息，我们把XmlNode转化为XmlElement。
+                int i = Convert.ToInt32(portChoose.GetAttribute("choose"));
+                if(i == 1)
+                {
+                    串口ToolStripMenuItem_Click(null,new EventArgs());
+                }
+                else if (i == 2)
+                {
+                    tCP服务端ToolStripMenuItem_Click(null, new EventArgs());
+                }
+                else if (i == 3)
+                {
+                    tCP客户端ToolStripMenuItem_Click(null, new EventArgs());
+                }
+            }
+            
             XmlNode node = root.SelectSingleNode("recList");//取仅有的一个元素
             if (node != null)
             {
@@ -234,10 +306,38 @@ namespace myPort
             dataFormat.SetAttribute("format", 高位在前ToolStripMenuItem.Checked.ToString());
             root.AppendChild(dataFormat);
 
+            XmlElement script = document.CreateElement("script");
+            script.SetAttribute("path", scriptPath);
+            script.SetAttribute("needScript", needScript.ToString());
+            root.AppendChild(script);
+
             XmlElement serial = document.CreateElement("serial");
             serial.SetAttribute("baud", baudCombo.Text);
             serial.SetAttribute("com", cmbPort.Text);
             root.AppendChild(serial);
+
+            XmlElement client = document.CreateElement("client");
+            client.SetAttribute("IP", tcpCliIP.Text);
+            client.SetAttribute("port", tcpCliPort.Text);
+            root.AppendChild(client);
+            XmlElement service = document.CreateElement("service");
+            service.SetAttribute("IP", serIP.Text);
+            service.SetAttribute("port", serPort.Text);
+            root.AppendChild(service);
+            XmlElement portChoose = document.CreateElement("portChoose");
+            if(串口ToolStripMenuItem.Checked)
+            {
+                portChoose.SetAttribute("choose", "1");
+            }
+            else if (tCP服务端ToolStripMenuItem.Checked)
+            {
+                portChoose.SetAttribute("choose", "2");
+            }
+            else if(tCP客户端ToolStripMenuItem.Checked)
+            {
+                portChoose.SetAttribute("choose","3");
+            }
+            root.AppendChild(portChoose);
 
             // recList
             XmlElement recs = document.CreateElement("recList");
@@ -373,14 +473,7 @@ namespace myPort
 
                 Task.Factory.StartNew(new Action(() =>
                 {
-                    string bs = byteArrayToString(vs);
-                    UIControl.AddTextBoxValue(recBox, "<---");
-                    UIControl.AddTextBoxValue(recBox, bs);
-                    if (needSave)
-                    {
-                        writeFile("<---" + bs);
-                    }
-                    dataParsing(vs, parsingObjs, recObjs);
+                    recData(vs);
                 }));
 
 
@@ -418,16 +511,50 @@ namespace myPort
         }
         private void sendData(byte[] vs)
         {
-            if (serialPort.IsOpen)
+            if (needScript)
             {
-                serialPort.Write(vs, 0, vs.Length);
-                string bs = byteArrayToString(vs);
-                UIControl.AddTextBoxValue(recBox, "--->");
-                UIControl.AddTextBoxValue(recBox, bs);
-                if (needSave)
+                try
                 {
-                    writeFile("--->" + bs);
+                    if (pyScript == null)
+                    {
+                        MessageBox.Show("脚本未加载");
+                    }
+                    else
+                    {
+                        vs = pyScript.dataSend(vs);
+                    }
+
                 }
+                catch (Exception exp)
+                {
+                    MessageBox.Show(exp.Message);
+                }
+
+            }
+            if (串口ToolStripMenuItem.Checked)
+            {
+                if (serialPort.IsOpen)
+                {
+                    serialPort.Write(vs, 0, vs.Length);
+                }
+            }
+            else if (tCP服务端ToolStripMenuItem.Checked)
+            {
+                foreach(Client cli in clientList)
+                {
+                    cli.SendMessage(vs);
+                }
+            }
+            else if (tCP客户端ToolStripMenuItem.Checked)
+            {
+                tcpClient.SendMessage(vs);
+            }
+            string bs = byteArrayToString(vs);
+            UIControl.AddTextBoxValue(recBox, "--->");
+            UIControl.AddTextBoxValue(recBox, bs);
+            if (needSave)
+            {
+                writeFile("--->" + bs);
             }
 
         }
@@ -620,12 +747,78 @@ namespace myPort
         {
             UIControl.ClearTextBoxValue(recBox);
         }
-
+        private void uiButton7_Click(object sender, EventArgs e)
+        {
+            UIControl.ClearTextBoxValue(recBox);
+        }
+        private void uiButton8_Click(object sender, EventArgs e)
+        {
+            UIControl.ClearTextBoxValue(recBox);
+        }
         private void recBox_TextChanged(object sender, EventArgs e)
         {
 
         }
         #region 界面配置
+        dynamic pyScript;
+        string scriptPath;
+        bool needScript = false;
+
+        private void 加载脚本ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Multiselect = true;//该值确定是否可以选择多个文件
+            dialog.Title = "请选择文件夹";
+            dialog.Filter = "python文件(*.py)|*.py";
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                string file = dialog.FileName;
+                ScriptEngine pyEngine = Python.CreateEngine();//创建Python解释器对象
+                pyScript = pyEngine.ExecuteFile(file);//读取脚本文件
+                scriptPath = file;
+            }
+        }
+
+        private void 禁止加载ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (needScript)
+            {
+                needScript = false;
+            }
+            else
+            {
+                needScript = true;
+            }
+            禁止加载ToolStripMenuItem.Checked = !needScript;
+        }
+
+        private void 串口ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            serialPanel.Visible = true;
+            socketSerPanel.Visible = false;
+            socketCliPanel.Visible = false;
+            串口ToolStripMenuItem.Checked = true;
+            tCP服务端ToolStripMenuItem.Checked = false;
+            tCP客户端ToolStripMenuItem.Checked = false;
+        }
+        private void tCP服务端ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            serialPanel.Visible = false;
+            socketSerPanel.Visible = true;
+            socketCliPanel.Visible = false;
+            串口ToolStripMenuItem.Checked = false;
+            tCP服务端ToolStripMenuItem.Checked = true;
+            tCP客户端ToolStripMenuItem.Checked = false;
+        }
+        private void tCP客户端ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            serialPanel.Visible = false;
+            socketSerPanel.Visible = false;
+            socketCliPanel.Visible = true;
+            串口ToolStripMenuItem.Checked = false;
+            tCP服务端ToolStripMenuItem.Checked = false;
+            tCP客户端ToolStripMenuItem.Checked = true;
+        }
         private void 收发配置ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (收发配置ToolStripMenuItem.Checked)
@@ -742,6 +935,38 @@ namespace myPort
                 rec.tempValue = rec.sendValue;
                 rec.tempIndex = 0;
             }
+        }
+        private void recData(byte[] vs)
+        {
+            if (needScript)
+            {
+                try
+                {
+                    if (pyScript == null)
+                    {
+                        MessageBox.Show("脚本未加载");
+                    }
+                    else
+                    {
+                        vs = pyScript.dataRec(vs);
+                    }
+
+                }
+                catch (Exception exp)
+                {
+                    MessageBox.Show(exp.Message);
+                }
+
+            }
+            string bs = byteArrayToString(vs);
+            UIControl.AddTextBoxValue(recBox, "<---");
+            UIControl.AddTextBoxValue(recBox, bs);
+            if (needSave)
+            {
+                writeFile("<---" + bs);
+            }
+
+            dataParsing(vs, parsingObjs, recObjs);
         }
         // 发送命令
         public void sendCmd(CmdObj obj)
@@ -1149,7 +1374,7 @@ namespace myPort
             public string cmdName { get; set; }
             public string cmdStr { get; set; }
             public Dictionary<string, byte> cmdLs { get; set; }
-            public Timer cmdTimer { get; set; }
+            public System.Windows.Forms.Timer cmdTimer { get; set; }
             public int time { get; set; }
             public bool timerNeed { get; set; }
             public bool timerIsStart { get; set; }
@@ -1157,7 +1382,7 @@ namespace myPort
             public CmdObj(Form1 parent)
             {
                 this.parent = parent;
-                cmdTimer = new Timer();
+                cmdTimer = new System.Windows.Forms.Timer();
                 cmdLs = new Dictionary<string, byte>();
                 timerIsStart = false;
                 cmdTimer.Tick += new EventHandler(TimerUp);
@@ -1168,5 +1393,218 @@ namespace myPort
         }
 
         #endregion
+
+        
+        #region TCP相关
+        public List<Client> clientList = new List<Client>();
+        Socket tcpServer;
+        Socket ClientSocket;
+        Thread tcpSerThread;
+        Client tcpClient;
+
+        // 服务端
+        private void uiButton3_Click(object sender, EventArgs e)
+        {
+            if(uiButton3.Text.Equals("侦听"))
+            {
+                IPAddress ip;
+                if (IPAddress.TryParse(serIP.Text, out ip))
+                {
+                    
+                    tcpServer = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);//创建socket对象
+                    tcpServer.Bind(new IPEndPoint(ip, serPort.IntValue));//绑定IP和申请端口
+
+                    tcpServer.Listen(100);//设置客户端最大连接数
+                    tcpSerThread = new Thread(tcpServerThread);//开启线程执行循环接收消息
+                    tcpSerThread.Start();
+                    Console.WriteLine("服务器已启动，等待连接.........");
+                    uiButton3.Text = "断开";
+
+                }
+                else
+                {
+                    MessageBox.Show("非法IP");
+                }
+                
+            }
+            else if (uiButton3.Text.Equals("断开"))
+            {
+                try
+                {
+                    //
+                    foreach (Client client in clientList)
+                    {
+                        client.Close();
+                    }
+                    if (tcpServer != null)
+                    {
+                        tcpServer.Close();
+                    }
+                    clientList.Clear();
+                    if (tcpSerThread != null)
+                    {
+                        tcpSerThread.Abort();
+                    }
+                    uiButton3.Text = "侦听";
+                }
+                catch (Exception exp)
+                {}
+            }
+        }
+        //客户端
+        private void uiButton5_Click(object sender, EventArgs e)
+        {
+            if(uiButton5.Text.Equals("连接"))
+            {
+                IPAddress ip;
+                if (IPAddress.TryParse(tcpCliIP.Text, out ip))
+                {
+                    ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                    try
+                    {
+                        var result = ClientSocket.BeginConnect(ip, tcpCliPort.IntValue, null, null);
+                        var success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(1));
+
+                        if (!success)
+                        {
+                            throw new Exception("Failed to connect.");
+                        }
+
+                        // we have connected
+                        ClientSocket.EndConnect(result);
+                        tcpClient = new Client(ClientSocket, this);
+                    }
+                    catch (Exception exp)
+                    {
+                        MessageBox.Show(exp.Message);
+                    }
+                    uiButton5.Text = "断开";
+                }
+                else
+                {
+                    MessageBox.Show("非法IP");
+                }
+            }
+            else
+            {
+                if(tcpClient != null)
+                {
+                    tcpClient.Close();
+                }
+                
+                uiButton5.Text = "连接";
+            }
+            
+
+        }
+        void tcpServerThread()
+        {
+            while (true)//循环等待新客户端的连接
+            {
+                try
+                {
+                    Socket clientSocket = tcpServer.Accept();
+                    Console.WriteLine((clientSocket.RemoteEndPoint as IPEndPoint).Address + "已连接");
+                    Client client = new Client(clientSocket, this);
+                    clientList.Add(client);
+                }
+                catch(Exception exp)
+                {
+
+                }
+                
+            }
+        }
+        public class Client
+        {
+            private Socket clientSocket;
+            private Thread t;
+            private Form1 form;
+            public string ip = "";
+            private byte[] data = new byte[1024];
+            public Client(Socket socket,Form1 form)
+            {
+                this.form = form;
+                clientSocket = socket;
+                ip = (clientSocket.RemoteEndPoint as IPEndPoint).Address.ToString();//获取客户端的ip
+                t = new Thread(ReceiveMessage);//开启线程执行循环接收消息
+                t.Start();
+            }
+            private void ReceiveMessage()//接收消息
+            {
+                int length = 0;//初始化消息的长度
+                while (true)//循环接收消息
+                {
+                    try
+                    {
+                        length = clientSocket.Receive(data);//获取存放消息数据数组的长度
+                        if (length != 0)//判断是否有数组内是否存放消息数据
+                        {
+                            byte[] vs = new byte[length];
+                            Array.Copy(data, vs, length);
+                            form.recData(vs);
+                        }
+                    }
+                    catch(Exception exp)
+                    {
+
+                    }
+                }
+            }
+            public void SendMessage(byte[] data)//发送消息
+            {
+                clientSocket.Send(data);
+            }
+            public bool Connected//获取该客户端的状态
+            {
+                get { return clientSocket.Connected; }
+            }
+            public void Close()
+            {
+                clientSocket.Close();
+                t.Abort();
+            }
+        }
+        private void uiButton4_Click(object sender, EventArgs e)
+        {
+            button2_Click(null, new EventArgs());
+        }
+        private void uiButton6_Click(object sender, EventArgs e)
+        {
+            button2_Click(null, new EventArgs());
+        }
+        
+        #endregion
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            try
+            {
+                if (tcpClient != null)
+                {
+                    tcpClient.Close();
+                }
+                foreach (Client client in clientList)
+                {
+                    client.Close();
+                }
+                if(tcpServer != null)
+                {
+                    tcpServer.Close();
+                }
+                clientList.Clear();
+                if(tcpSerThread != null)
+                {
+                    tcpSerThread.Abort();
+                }
+                
+            }
+            catch (Exception exp)
+            {
+
+            }
+        }
+
+        
     }
 }

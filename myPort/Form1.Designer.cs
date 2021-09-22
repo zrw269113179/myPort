@@ -52,7 +52,6 @@ namespace myPort
             this.串口ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tCP服务端ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tCP客户端ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.uDPToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.配置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.导入ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.导出ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -70,6 +69,9 @@ namespace myPort
             this.数据保存ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.开始保存ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.保存图像数据ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.脚本ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.加载脚本ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.禁止加载ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.LineChart = new Sunny.UI.UILineChart();
@@ -87,13 +89,29 @@ namespace myPort
             this.sendName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sendValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.socketCliPanel = new System.Windows.Forms.Panel();
+            this.uiButton6 = new Sunny.UI.UIButton();
+            this.uiButton5 = new Sunny.UI.UIButton();
+            this.uiLabel4 = new Sunny.UI.UILabel();
+            this.tcpCliPort = new Sunny.UI.UITextBox();
+            this.tcpCliIP = new Sunny.UI.UITextBox();
+            this.uiLabel3 = new Sunny.UI.UILabel();
+            this.socketSerPanel = new System.Windows.Forms.Panel();
+            this.uiButton7 = new Sunny.UI.UIButton();
+            this.uiButton4 = new Sunny.UI.UIButton();
+            this.uiButton3 = new Sunny.UI.UIButton();
+            this.serPort = new Sunny.UI.UITextBox();
+            this.uiLabel2 = new Sunny.UI.UILabel();
+            this.serIP = new Sunny.UI.UITextBox();
+            this.uiLabel1 = new Sunny.UI.UILabel();
+            this.serialPanel = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
             this.baudCombo = new Sunny.UI.UIComboBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.cmbPort = new Sunny.UI.UIComboBox();
+            this.uiButton1 = new Sunny.UI.UIButton();
             this.button1 = new Sunny.UI.UIButton();
             this.uiButton2 = new Sunny.UI.UIButton();
-            this.uiButton1 = new Sunny.UI.UIButton();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.uiTitlePanel1 = new Sunny.UI.UITitlePanel();
             this.sendBox = new Sunny.UI.UITextBox();
@@ -102,6 +120,7 @@ namespace myPort
             this.serialPort = new System.IO.Ports.SerialPort(this.components);
             this.sendObjBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.recObjBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.uiButton8 = new Sunny.UI.UIButton();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -115,6 +134,9 @@ namespace myPort
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.socketCliPanel.SuspendLayout();
+            this.socketSerPanel.SuspendLayout();
+            this.serialPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
@@ -132,7 +154,8 @@ namespace myPort
             this.配置ToolStripMenuItem,
             this.协议配置ToolStripMenuItem,
             this.图像配置ToolStripMenuItem,
-            this.数据保存ToolStripMenuItem});
+            this.数据保存ToolStripMenuItem,
+            this.脚本ToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 35);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 3, 0, 3);
@@ -146,8 +169,7 @@ namespace myPort
             this.刷新端口ToolStripMenuItem,
             this.串口ToolStripMenuItem,
             this.tCP服务端ToolStripMenuItem,
-            this.tCP客户端ToolStripMenuItem,
-            this.uDPToolStripMenuItem});
+            this.tCP客户端ToolStripMenuItem});
             this.串口配置ToolStripMenuItem.Name = "串口配置ToolStripMenuItem";
             this.串口配置ToolStripMenuItem.Size = new System.Drawing.Size(68, 21);
             this.串口配置ToolStripMenuItem.Text = "端口配置";
@@ -166,24 +188,21 @@ namespace myPort
             this.串口ToolStripMenuItem.Name = "串口ToolStripMenuItem";
             this.串口ToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.串口ToolStripMenuItem.Text = "串口";
+            this.串口ToolStripMenuItem.Click += new System.EventHandler(this.串口ToolStripMenuItem_Click);
             // 
             // tCP服务端ToolStripMenuItem
             // 
             this.tCP服务端ToolStripMenuItem.Name = "tCP服务端ToolStripMenuItem";
             this.tCP服务端ToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.tCP服务端ToolStripMenuItem.Text = "TCP服务端";
+            this.tCP服务端ToolStripMenuItem.Click += new System.EventHandler(this.tCP服务端ToolStripMenuItem_Click);
             // 
             // tCP客户端ToolStripMenuItem
             // 
             this.tCP客户端ToolStripMenuItem.Name = "tCP客户端ToolStripMenuItem";
             this.tCP客户端ToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.tCP客户端ToolStripMenuItem.Text = "TCP客户端";
-            // 
-            // uDPToolStripMenuItem
-            // 
-            this.uDPToolStripMenuItem.Name = "uDPToolStripMenuItem";
-            this.uDPToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
-            this.uDPToolStripMenuItem.Text = "UDP";
+            this.tCP客户端ToolStripMenuItem.Click += new System.EventHandler(this.tCP客户端ToolStripMenuItem_Click);
             // 
             // 配置ToolStripMenuItem
             // 
@@ -328,6 +347,31 @@ namespace myPort
             this.保存图像数据ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.保存图像数据ToolStripMenuItem.Text = "保存图像数据";
             this.保存图像数据ToolStripMenuItem.Click += new System.EventHandler(this.保存图像数据ToolStripMenuItem_Click);
+            // 
+            // 脚本ToolStripMenuItem
+            // 
+            this.脚本ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.加载脚本ToolStripMenuItem,
+            this.禁止加载ToolStripMenuItem});
+            this.脚本ToolStripMenuItem.Name = "脚本ToolStripMenuItem";
+            this.脚本ToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
+            this.脚本ToolStripMenuItem.Text = "脚本";
+            // 
+            // 加载脚本ToolStripMenuItem
+            // 
+            this.加载脚本ToolStripMenuItem.Name = "加载脚本ToolStripMenuItem";
+            this.加载脚本ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.加载脚本ToolStripMenuItem.Text = "加载脚本";
+            this.加载脚本ToolStripMenuItem.Click += new System.EventHandler(this.加载脚本ToolStripMenuItem_Click);
+            // 
+            // 禁止加载ToolStripMenuItem
+            // 
+            this.禁止加载ToolStripMenuItem.Checked = true;
+            this.禁止加载ToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.禁止加载ToolStripMenuItem.Name = "禁止加载ToolStripMenuItem";
+            this.禁止加载ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.禁止加载ToolStripMenuItem.Text = "禁止加载";
+            this.禁止加载ToolStripMenuItem.Click += new System.EventHandler(this.禁止加载ToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
@@ -624,13 +668,9 @@ namespace myPort
             // 
             // splitContainer2.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.baudCombo);
-            this.splitContainer2.Panel1.Controls.Add(this.cmbPort);
-            this.splitContainer2.Panel1.Controls.Add(this.button1);
-            this.splitContainer2.Panel1.Controls.Add(this.uiButton2);
-            this.splitContainer2.Panel1.Controls.Add(this.uiButton1);
-            this.splitContainer2.Panel1.Controls.Add(this.label2);
-            this.splitContainer2.Panel1.Controls.Add(this.label1);
+            this.splitContainer2.Panel1.Controls.Add(this.socketCliPanel);
+            this.splitContainer2.Panel1.Controls.Add(this.socketSerPanel);
+            this.splitContainer2.Panel1.Controls.Add(this.serialPanel);
             // 
             // splitContainer2.Panel2
             // 
@@ -638,6 +678,234 @@ namespace myPort
             this.splitContainer2.Size = new System.Drawing.Size(1033, 118);
             this.splitContainer2.SplitterDistance = 175;
             this.splitContainer2.TabIndex = 0;
+            // 
+            // socketCliPanel
+            // 
+            this.socketCliPanel.Controls.Add(this.uiButton8);
+            this.socketCliPanel.Controls.Add(this.uiButton6);
+            this.socketCliPanel.Controls.Add(this.uiButton5);
+            this.socketCliPanel.Controls.Add(this.uiLabel4);
+            this.socketCliPanel.Controls.Add(this.tcpCliPort);
+            this.socketCliPanel.Controls.Add(this.tcpCliIP);
+            this.socketCliPanel.Controls.Add(this.uiLabel3);
+            this.socketCliPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.socketCliPanel.Location = new System.Drawing.Point(0, 0);
+            this.socketCliPanel.Name = "socketCliPanel";
+            this.socketCliPanel.Size = new System.Drawing.Size(175, 118);
+            this.socketCliPanel.TabIndex = 6;
+            // 
+            // uiButton6
+            // 
+            this.uiButton6.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.uiButton6.Font = new System.Drawing.Font("微软雅黑", 12F);
+            this.uiButton6.Location = new System.Drawing.Point(71, 74);
+            this.uiButton6.MinimumSize = new System.Drawing.Size(1, 1);
+            this.uiButton6.Name = "uiButton6";
+            this.uiButton6.Size = new System.Drawing.Size(100, 35);
+            this.uiButton6.TabIndex = 5;
+            this.uiButton6.Text = "发送";
+            this.uiButton6.Click += new System.EventHandler(this.uiButton6_Click);
+            // 
+            // uiButton5
+            // 
+            this.uiButton5.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.uiButton5.Font = new System.Drawing.Font("微软雅黑", 10F);
+            this.uiButton5.Location = new System.Drawing.Point(3, 68);
+            this.uiButton5.MinimumSize = new System.Drawing.Size(1, 1);
+            this.uiButton5.Name = "uiButton5";
+            this.uiButton5.Size = new System.Drawing.Size(57, 26);
+            this.uiButton5.TabIndex = 4;
+            this.uiButton5.Text = "连接";
+            this.uiButton5.Click += new System.EventHandler(this.uiButton5_Click);
+            // 
+            // uiLabel4
+            // 
+            this.uiLabel4.Font = new System.Drawing.Font("微软雅黑", 12F);
+            this.uiLabel4.Location = new System.Drawing.Point(4, 42);
+            this.uiLabel4.Name = "uiLabel4";
+            this.uiLabel4.Size = new System.Drawing.Size(96, 23);
+            this.uiLabel4.Style = Sunny.UI.UIStyle.Custom;
+            this.uiLabel4.TabIndex = 3;
+            this.uiLabel4.Text = "服务器端口";
+            this.uiLabel4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // tcpCliPort
+            // 
+            this.tcpCliPort.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.tcpCliPort.DoubleValue = 9000D;
+            this.tcpCliPort.FillColor = System.Drawing.Color.White;
+            this.tcpCliPort.Font = new System.Drawing.Font("微软雅黑", 12F);
+            this.tcpCliPort.IntValue = 9000;
+            this.tcpCliPort.Location = new System.Drawing.Point(114, 39);
+            this.tcpCliPort.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.tcpCliPort.Maximum = 2147483647D;
+            this.tcpCliPort.Minimum = -2147483648D;
+            this.tcpCliPort.MinimumSize = new System.Drawing.Size(1, 1);
+            this.tcpCliPort.Name = "tcpCliPort";
+            this.tcpCliPort.Size = new System.Drawing.Size(54, 29);
+            this.tcpCliPort.TabIndex = 2;
+            this.tcpCliPort.Text = "9000";
+            this.tcpCliPort.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
+            this.tcpCliPort.Type = Sunny.UI.UITextBox.UIEditType.Integer;
+            // 
+            // tcpCliIP
+            // 
+            this.tcpCliIP.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.tcpCliIP.FillColor = System.Drawing.Color.White;
+            this.tcpCliIP.Font = new System.Drawing.Font("微软雅黑", 12F);
+            this.tcpCliIP.Location = new System.Drawing.Point(39, 4);
+            this.tcpCliIP.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.tcpCliIP.Maximum = 2147483647D;
+            this.tcpCliIP.Minimum = -2147483648D;
+            this.tcpCliIP.MinimumSize = new System.Drawing.Size(1, 1);
+            this.tcpCliIP.Name = "tcpCliIP";
+            this.tcpCliIP.Size = new System.Drawing.Size(129, 29);
+            this.tcpCliIP.TabIndex = 1;
+            this.tcpCliIP.Text = "127.0.0.1";
+            this.tcpCliIP.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // uiLabel3
+            // 
+            this.uiLabel3.Font = new System.Drawing.Font("微软雅黑", 12F);
+            this.uiLabel3.Location = new System.Drawing.Point(7, 7);
+            this.uiLabel3.Name = "uiLabel3";
+            this.uiLabel3.Size = new System.Drawing.Size(37, 23);
+            this.uiLabel3.Style = Sunny.UI.UIStyle.Custom;
+            this.uiLabel3.TabIndex = 0;
+            this.uiLabel3.Text = "IP";
+            this.uiLabel3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // socketSerPanel
+            // 
+            this.socketSerPanel.Controls.Add(this.uiButton7);
+            this.socketSerPanel.Controls.Add(this.uiButton4);
+            this.socketSerPanel.Controls.Add(this.uiButton3);
+            this.socketSerPanel.Controls.Add(this.serPort);
+            this.socketSerPanel.Controls.Add(this.uiLabel2);
+            this.socketSerPanel.Controls.Add(this.serIP);
+            this.socketSerPanel.Controls.Add(this.uiLabel1);
+            this.socketSerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.socketSerPanel.Location = new System.Drawing.Point(0, 0);
+            this.socketSerPanel.Name = "socketSerPanel";
+            this.socketSerPanel.Size = new System.Drawing.Size(175, 118);
+            this.socketSerPanel.TabIndex = 12;
+            // 
+            // uiButton7
+            // 
+            this.uiButton7.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.uiButton7.Font = new System.Drawing.Font("微软雅黑", 12F);
+            this.uiButton7.Location = new System.Drawing.Point(7, 76);
+            this.uiButton7.MinimumSize = new System.Drawing.Size(1, 1);
+            this.uiButton7.Name = "uiButton7";
+            this.uiButton7.Size = new System.Drawing.Size(37, 33);
+            this.uiButton7.TabIndex = 6;
+            this.uiButton7.Text = "清空";
+            this.uiButton7.Click += new System.EventHandler(this.uiButton7_Click);
+            // 
+            // uiButton4
+            // 
+            this.uiButton4.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.uiButton4.Font = new System.Drawing.Font("微软雅黑", 12F);
+            this.uiButton4.Location = new System.Drawing.Point(71, 76);
+            this.uiButton4.MinimumSize = new System.Drawing.Size(1, 1);
+            this.uiButton4.Name = "uiButton4";
+            this.uiButton4.Size = new System.Drawing.Size(100, 35);
+            this.uiButton4.TabIndex = 5;
+            this.uiButton4.Text = "发送";
+            this.uiButton4.Click += new System.EventHandler(this.uiButton4_Click);
+            // 
+            // uiButton3
+            // 
+            this.uiButton3.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.uiButton3.Font = new System.Drawing.Font("微软雅黑", 12F);
+            this.uiButton3.Location = new System.Drawing.Point(114, 39);
+            this.uiButton3.MinimumSize = new System.Drawing.Size(1, 1);
+            this.uiButton3.Name = "uiButton3";
+            this.uiButton3.Size = new System.Drawing.Size(57, 29);
+            this.uiButton3.TabIndex = 4;
+            this.uiButton3.Text = "侦听";
+            this.uiButton3.Click += new System.EventHandler(this.uiButton3_Click);
+            // 
+            // serPort
+            // 
+            this.serPort.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.serPort.DoubleValue = 9000D;
+            this.serPort.FillColor = System.Drawing.Color.White;
+            this.serPort.Font = new System.Drawing.Font("微软雅黑", 12F);
+            this.serPort.IntValue = 9000;
+            this.serPort.Location = new System.Drawing.Point(47, 39);
+            this.serPort.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.serPort.Maximum = 2147483647D;
+            this.serPort.Minimum = -2147483648D;
+            this.serPort.MinimumSize = new System.Drawing.Size(1, 1);
+            this.serPort.Name = "serPort";
+            this.serPort.Size = new System.Drawing.Size(53, 29);
+            this.serPort.TabIndex = 3;
+            this.serPort.Text = "9000";
+            this.serPort.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
+            this.serPort.Type = Sunny.UI.UITextBox.UIEditType.Integer;
+            // 
+            // uiLabel2
+            // 
+            this.uiLabel2.Font = new System.Drawing.Font("微软雅黑", 12F);
+            this.uiLabel2.Location = new System.Drawing.Point(3, 42);
+            this.uiLabel2.Name = "uiLabel2";
+            this.uiLabel2.Size = new System.Drawing.Size(57, 23);
+            this.uiLabel2.Style = Sunny.UI.UIStyle.Custom;
+            this.uiLabel2.TabIndex = 2;
+            this.uiLabel2.Text = "端口";
+            this.uiLabel2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // serIP
+            // 
+            this.serIP.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.serIP.FillColor = System.Drawing.Color.White;
+            this.serIP.Font = new System.Drawing.Font("微软雅黑", 12F);
+            this.serIP.Location = new System.Drawing.Point(47, 4);
+            this.serIP.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.serIP.Maximum = 2147483647D;
+            this.serIP.Minimum = -2147483648D;
+            this.serIP.MinimumSize = new System.Drawing.Size(1, 1);
+            this.serIP.Name = "serIP";
+            this.serIP.Size = new System.Drawing.Size(125, 29);
+            this.serIP.TabIndex = 1;
+            this.serIP.Text = "127.0.0.1";
+            this.serIP.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // uiLabel1
+            // 
+            this.uiLabel1.Font = new System.Drawing.Font("微软雅黑", 12F);
+            this.uiLabel1.Location = new System.Drawing.Point(4, 7);
+            this.uiLabel1.Name = "uiLabel1";
+            this.uiLabel1.Size = new System.Drawing.Size(26, 23);
+            this.uiLabel1.Style = Sunny.UI.UIStyle.Custom;
+            this.uiLabel1.TabIndex = 0;
+            this.uiLabel1.Text = "IP";
+            this.uiLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // serialPanel
+            // 
+            this.serialPanel.Controls.Add(this.label1);
+            this.serialPanel.Controls.Add(this.baudCombo);
+            this.serialPanel.Controls.Add(this.label2);
+            this.serialPanel.Controls.Add(this.cmbPort);
+            this.serialPanel.Controls.Add(this.uiButton1);
+            this.serialPanel.Controls.Add(this.button1);
+            this.serialPanel.Controls.Add(this.uiButton2);
+            this.serialPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.serialPanel.Location = new System.Drawing.Point(0, 0);
+            this.serialPanel.Name = "serialPanel";
+            this.serialPanel.Size = new System.Drawing.Size(175, 118);
+            this.serialPanel.TabIndex = 12;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 8);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(58, 21);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "端口号";
             // 
             // baudCombo
             // 
@@ -667,6 +935,15 @@ namespace myPort
             this.baudCombo.TabIndex = 11;
             this.baudCombo.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(3, 35);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(58, 21);
+            this.label2.TabIndex = 2;
+            this.label2.Text = "波特率";
+            // 
             // cmbPort
             // 
             this.cmbPort.DataSource = null;
@@ -681,6 +958,18 @@ namespace myPort
             this.cmbPort.Size = new System.Drawing.Size(104, 21);
             this.cmbPort.TabIndex = 10;
             this.cmbPort.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // uiButton1
+            // 
+            this.uiButton1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.uiButton1.Font = new System.Drawing.Font("微软雅黑", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.uiButton1.Location = new System.Drawing.Point(99, 61);
+            this.uiButton1.MinimumSize = new System.Drawing.Size(1, 1);
+            this.uiButton1.Name = "uiButton1";
+            this.uiButton1.Size = new System.Drawing.Size(73, 54);
+            this.uiButton1.TabIndex = 7;
+            this.uiButton1.Text = "发送";
+            this.uiButton1.Click += new System.EventHandler(this.button2_Click);
             // 
             // button1
             // 
@@ -705,36 +994,6 @@ namespace myPort
             this.uiButton2.TabIndex = 8;
             this.uiButton2.Text = "清空";
             this.uiButton2.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // uiButton1
-            // 
-            this.uiButton1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.uiButton1.Font = new System.Drawing.Font("微软雅黑", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.uiButton1.Location = new System.Drawing.Point(99, 61);
-            this.uiButton1.MinimumSize = new System.Drawing.Size(1, 1);
-            this.uiButton1.Name = "uiButton1";
-            this.uiButton1.Size = new System.Drawing.Size(73, 54);
-            this.uiButton1.TabIndex = 7;
-            this.uiButton1.Text = "发送";
-            this.uiButton1.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 35);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(58, 21);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "波特率";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 8);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(58, 21);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "端口号";
             // 
             // splitContainer3
             // 
@@ -841,6 +1100,18 @@ namespace myPort
             // 
             this.recObjBindingSource.DataSource = typeof(myPort.RecObj);
             // 
+            // uiButton8
+            // 
+            this.uiButton8.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.uiButton8.Font = new System.Drawing.Font("微软雅黑", 10F);
+            this.uiButton8.Location = new System.Drawing.Point(3, 100);
+            this.uiButton8.MinimumSize = new System.Drawing.Size(1, 1);
+            this.uiButton8.Name = "uiButton8";
+            this.uiButton8.Size = new System.Drawing.Size(41, 15);
+            this.uiButton8.TabIndex = 6;
+            this.uiButton8.Text = "清空";
+            this.uiButton8.Click += new System.EventHandler(this.uiButton8_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 21F);
@@ -851,6 +1122,7 @@ namespace myPort
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "myPort";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -862,10 +1134,13 @@ namespace myPort
             ((System.ComponentModel.ISupportInitialize)(this.recList)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.sendList)).EndInit();
             this.splitContainer2.Panel1.ResumeLayout(false);
-            this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.socketCliPanel.ResumeLayout(false);
+            this.socketSerPanel.ResumeLayout(false);
+            this.serialPanel.ResumeLayout(false);
+            this.serialPanel.PerformLayout();
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
@@ -887,7 +1162,6 @@ namespace myPort
         private System.Windows.Forms.ToolStripMenuItem 串口ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tCP服务端ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tCP客户端ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem uDPToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 配置ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 导入ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 导出ToolStripMenuItem;
@@ -937,6 +1211,26 @@ namespace myPort
         private System.Windows.Forms.DataGridViewButtonColumn cmdSend;
         private System.Windows.Forms.DataGridViewCheckBoxColumn cmdTimer;
         private System.Windows.Forms.DataGridViewTextBoxColumn cmdTimerParam;
+        private System.Windows.Forms.ToolStripMenuItem 脚本ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 加载脚本ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 禁止加载ToolStripMenuItem;
+        private System.Windows.Forms.Panel serialPanel;
+        private System.Windows.Forms.Panel socketSerPanel;
+        private Sunny.UI.UIButton uiButton4;
+        private Sunny.UI.UIButton uiButton3;
+        private Sunny.UI.UITextBox serPort;
+        private Sunny.UI.UILabel uiLabel2;
+        private Sunny.UI.UITextBox serIP;
+        private Sunny.UI.UILabel uiLabel1;
+        private System.Windows.Forms.Panel socketCliPanel;
+        private Sunny.UI.UIButton uiButton6;
+        private Sunny.UI.UIButton uiButton5;
+        private Sunny.UI.UILabel uiLabel4;
+        private Sunny.UI.UITextBox tcpCliPort;
+        private Sunny.UI.UITextBox tcpCliIP;
+        private Sunny.UI.UILabel uiLabel3;
+        private Sunny.UI.UIButton uiButton7;
+        private Sunny.UI.UIButton uiButton8;
     }
 }
 

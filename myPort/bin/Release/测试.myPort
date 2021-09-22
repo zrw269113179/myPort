@@ -1,7 +1,11 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <setup>
   <dataformat format="True" />
+  <script path="F:\vs2019 project\myPort_SunnyUI\myPort\bin\Release\data.py" needScript="False" />
   <serial baud="9600" com="COM9" />
+  <client IP="127.0.0.1" port="777" />
+  <service IP="192.168.1.100" port="9000" />
+  <portChoose choose="3" />
   <recList>
     <rec recName="接收数据" recIsShow="True" />
   </recList>
