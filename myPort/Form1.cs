@@ -26,6 +26,8 @@ namespace myPort
         public List<SendObj> sendObjs = new List<SendObj>();
         public List<CmdObj> cmdObjs = new List<CmdObj>();
         public List<ParsingObj> parsingObjs = new List<ParsingObj>();
+        public bool isRecHex = true;
+        public bool isSendHex = true;
         UILineOption option = new UILineOption();
         public Form1()
         {
@@ -37,11 +39,17 @@ namespace myPort
             option.ToolTip.Visible = true;
             option.Title = null;
 
-            option.XAxis.AxisLabel.DecimalCount = 1;
-            option.XAxis.AxisLabel.AutoFormat = false;
-            option.YAxis.AxisLabel.DecimalCount = 1;
-            option.YAxis.AxisLabel.AutoFormat = false;
-
+            //option.XAxis.AxisLabel.DecimalCount = 1;
+            //option.XAxis.AxisLabel.AutoFormat = false;
+            //option.YAxis.AxisLabel.DecimalCount = 1;
+            //option.YAxis.AxisLabel.AutoFormat = false;
+            option.Grid.Bottom = 30;
+            option.Grid.Top = 30;
+            option.Grid.Left = 30;
+            option.Grid.Right = 30;
+            option.ToolTip.Visible = true;
+            option.YAxis.Scale = true;
+            option.XAxis.Scale = true;
             LineChart.SetOption(option);
 
 
@@ -74,7 +82,7 @@ namespace myPort
             string localFilePath = "";
             //string localFilePath, fileNameExt, newFileName, FilePath; 
             SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "myPort（*.myPort）|*.myPort";
+            sfd.Filter = "myPort(*.myPort)|*.myPort";
             //设置默认文件类型显示顺序 
             sfd.FilterIndex = 1;
             //保存对话框是否记忆上次打开的目录 
@@ -83,7 +91,7 @@ namespace myPort
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 localFilePath = sfd.FileName.ToString(); //获得文件路径 
-                string fileNameExt = localFilePath.Substring(localFilePath.LastIndexOf("\\") + 1); //获取文件名，不带路径
+                string fileNameExt = localFilePath.Substring(localFilePath.LastIndexOf("\\") + 1); //获取文件名,不带路径
                 saveParam(localFilePath);
             }
 
@@ -105,16 +113,16 @@ namespace myPort
         void loadParam(string path)
         {
             XmlDocument doc = new XmlDocument();//创建一个XML文档
-            XmlReaderSettings settings = new XmlReaderSettings();//设置读取XML时的属性。
-            settings.IgnoreComments = true;//XML忽略注释。
+            XmlReaderSettings settings = new XmlReaderSettings();//设置读取XML时的属性.
+            settings.IgnoreComments = true;//XML忽略注释.
 
-            XmlReader xmlReader = XmlReader.Create(path, settings);//实例化一个XmlReader对象，解析XML文件
-            doc.Load(xmlReader);//从指定的 XmlReader 加载 XML 文档。
+            XmlReader xmlReader = XmlReader.Create(path, settings);//实例化一个XmlReader对象,解析XML文件
+            doc.Load(xmlReader);//从指定的 XmlReader 加载 XML 文档.
             XmlNode root = doc.SelectSingleNode("setup");//读取根元素下的子元素集合
             XmlNode dataformatNode = root.SelectSingleNode("dataformat");//取仅有的一个元素
             if (dataformatNode != null)
             {
-                XmlElement dataformat = (XmlElement)dataformatNode;//为了可以使用属性存储信息，我们把XmlNode转化为XmlElement。
+                XmlElement dataformat = (XmlElement)dataformatNode;//为了可以使用属性存储信息,我们把XmlNode转化为XmlElement.
                 if (dataformat.GetAttribute("format") == "False")
                 {
                     高位在前ToolStripMenuItem.Checked = false;
@@ -129,7 +137,7 @@ namespace myPort
             XmlNode scriptNode = root.SelectSingleNode("script");//取仅有的一个元素
             if (scriptNode != null)
             {
-                XmlElement script = (XmlElement)scriptNode;//为了可以使用属性存储信息，我们把XmlNode转化为XmlElement。
+                XmlElement script = (XmlElement)scriptNode;//为了可以使用属性存储信息,我们把XmlNode转化为XmlElement.
                 if (script.GetAttribute("needScript") == "False")
                 {
                     needScript = false;
@@ -164,7 +172,7 @@ namespace myPort
             XmlNode serialNode = root.SelectSingleNode("serial");//取仅有的一个元素
             if (serialNode != null)
             {
-                XmlElement serial = (XmlElement)serialNode;//为了可以使用属性存储信息，我们把XmlNode转化为XmlElement。
+                XmlElement serial = (XmlElement)serialNode;//为了可以使用属性存储信息,我们把XmlNode转化为XmlElement.
                 baudCombo.Text = serial.GetAttribute("baud");
                 string com = serial.GetAttribute("com");
                 if (cmbPort.Items.Contains(com))
@@ -175,21 +183,88 @@ namespace myPort
             XmlNode tcpSerNode = root.SelectSingleNode("service");//取仅有的一个元素
             if (tcpSerNode != null)
             {
-                XmlElement tcpSer = (XmlElement)tcpSerNode;//为了可以使用属性存储信息，我们把XmlNode转化为XmlElement。
+                XmlElement tcpSer = (XmlElement)tcpSerNode;//为了可以使用属性存储信息,我们把XmlNode转化为XmlElement.
                 serIP.Text = tcpSer.GetAttribute("IP");
                 serPort.Text = tcpSer.GetAttribute("port");
             }
             XmlNode tcpCliNode = root.SelectSingleNode("client");//取仅有的一个元素
             if (tcpCliNode != null)
             {
-                XmlElement tcpCli = (XmlElement)tcpCliNode;//为了可以使用属性存储信息，我们把XmlNode转化为XmlElement。
+                XmlElement tcpCli = (XmlElement)tcpCliNode;//为了可以使用属性存储信息,我们把XmlNode转化为XmlElement.
                 tcpCliIP.Text = tcpCli.GetAttribute("IP");
                 tcpCliPort.Text = tcpCli.GetAttribute("port");
             }
+
+            XmlNode UINode = root.SelectSingleNode("UI");//取仅有的一个元素
+            if (UINode != null)
+            {
+                XmlElement UI = (XmlElement)UINode;//为了可以使用属性存储信息,我们把XmlNode转化为XmlElement.
+                if (UI.GetAttribute("recHex") == "False")
+                {
+                    接收区十六进制ToolStripMenuItem.Checked = false;
+                }
+                else
+                {
+                    接收区十六进制ToolStripMenuItem.Checked = true;
+                }
+
+                if (UI.GetAttribute("sendHex") == "False")
+                {
+                    设置区十六进制ToolStripMenuItem.Checked = false;
+                }
+                else
+                {
+                    设置区十六进制ToolStripMenuItem.Checked = true;
+                }
+
+                if (UI.GetAttribute("recUI") == "False")
+                {
+                    接收参数ToolStripMenuItem.Checked = false; 
+                }
+                else
+                {
+                    接收参数ToolStripMenuItem.Checked = true;
+                }
+                if (UI.GetAttribute("setUI") == "False")
+                {
+                    设置参数ToolStripMenuItem.Checked = false;
+                }
+                else
+                {
+                    设置参数ToolStripMenuItem.Checked = true;
+                }
+                if (UI.GetAttribute("chartUI") == "False")
+                {
+                    曲线ToolStripMenuItem.Checked = false;
+                }
+                else
+                {
+                    曲线ToolStripMenuItem.Checked = true;
+                }
+                if (UI.GetAttribute("cmdUI") == "False")
+                {
+                    命令ToolStripMenuItem.Checked = false;
+                }
+                else
+                {
+                    命令ToolStripMenuItem.Checked = true;
+                }
+                if (UI.GetAttribute("configUI") == "False")
+                {
+                    收发配置ToolStripMenuItem.Checked = false;
+                }
+                else
+                {
+                    收发配置ToolStripMenuItem.Checked = true;
+                }
+                menuUpdata();
+            }
+
+
             XmlNode portChooseNode = root.SelectSingleNode("portChoose");//取仅有的一个元素
             if (portChooseNode != null)
             {
-                XmlElement portChoose = (XmlElement)portChooseNode;//为了可以使用属性存储信息，我们把XmlNode转化为XmlElement。
+                XmlElement portChoose = (XmlElement)portChooseNode;//为了可以使用属性存储信息,我们把XmlNode转化为XmlElement.
                 int i = Convert.ToInt32(portChoose.GetAttribute("choose"));
                 if(i == 1)
                 {
@@ -208,7 +283,7 @@ namespace myPort
             XmlNode node = root.SelectSingleNode("recList");//取仅有的一个元素
             if (node != null)
             {
-                XmlElement element = (XmlElement)node;//为了可以使用属性存储信息，我们把XmlNode转化为XmlElement。
+                XmlElement element = (XmlElement)node;//为了可以使用属性存储信息,我们把XmlNode转化为XmlElement.
                 XmlNodeList recs = element.ChildNodes;
                 recObjs.Clear();
                 recList.Rows.Clear();
@@ -230,7 +305,7 @@ namespace myPort
             XmlNode parsingNode = root.SelectSingleNode("parsingList");//取仅有的一个元素
             if (parsingNode != null)
             {
-                XmlElement parsingelement = (XmlElement)parsingNode;//为了可以使用属性存储信息，我们把XmlNode转化为XmlElement。
+                XmlElement parsingelement = (XmlElement)parsingNode;//为了可以使用属性存储信息,我们把XmlNode转化为XmlElement.
                 XmlNodeList parsings = parsingelement.ChildNodes;
                 parsingObjs.Clear();
                 foreach (XmlElement xml in parsings)
@@ -248,7 +323,7 @@ namespace myPort
             XmlNode sendNode = root.SelectSingleNode("sendList");//取仅有的一个元素
             if (sendNode != null)
             {
-                XmlElement sendelement = (XmlElement)sendNode;//为了可以使用属性存储信息，我们把XmlNode转化为XmlElement。
+                XmlElement sendelement = (XmlElement)sendNode;//为了可以使用属性存储信息,我们把XmlNode转化为XmlElement.
                 XmlNodeList sends = sendelement.ChildNodes;
                 sendObjs.Clear();
                 sendList.Rows.Clear();
@@ -265,7 +340,7 @@ namespace myPort
             XmlNode cmdNode = root.SelectSingleNode("cmdList");//取仅有的一个元素
             if (cmdNode != null)
             {
-                XmlElement cmdelement = (XmlElement)cmdNode;//为了可以使用属性存储信息，我们把XmlNode转化为XmlElement。
+                XmlElement cmdelement = (XmlElement)cmdNode;//为了可以使用属性存储信息,我们把XmlNode转化为XmlElement.
                 XmlNodeList cmds = cmdelement.ChildNodes;
                 cmdObjs.Clear();
                 cmdList.Rows.Clear();
@@ -282,7 +357,11 @@ namespace myPort
 
                     temp = xml.GetAttribute("time");
                     if (!String.IsNullOrEmpty(temp))
+                    {
                         cmd.time = Convert.ToInt32(temp);
+                        cmd.cmdTimer.Interval = cmd.time;
+                    }
+                        
 
                     temp = xml.GetAttribute("timerNeed");
                     if (!String.IsNullOrEmpty(temp))
@@ -290,7 +369,8 @@ namespace myPort
 
                     parseCmd(cmd);
                     cmdObjs.Add(cmd);
-                    cmdList.Rows.Add(cmd.cmdName, cmd.cmdStr);
+                    cmdList.Rows.Add(cmd.cmdName, cmd.cmdStr,null,cmd.timerNeed,cmd.time);
+                    
 
                 }
             }
@@ -310,6 +390,16 @@ namespace myPort
             script.SetAttribute("path", scriptPath);
             script.SetAttribute("needScript", needScript.ToString());
             root.AppendChild(script);
+
+            XmlElement UI = document.CreateElement("UI");
+            UI.SetAttribute("recHex", 接收区十六进制ToolStripMenuItem.Checked.ToString());
+            UI.SetAttribute("sendHex", 设置区十六进制ToolStripMenuItem.Checked.ToString());
+            UI.SetAttribute("recUI", 接收参数ToolStripMenuItem.Checked.ToString());
+            UI.SetAttribute("setUI", 设置参数ToolStripMenuItem.Checked.ToString());
+            UI.SetAttribute("chartUI", 曲线ToolStripMenuItem.Checked.ToString());
+            UI.SetAttribute("cmdUI", 命令ToolStripMenuItem.Checked.ToString());
+            UI.SetAttribute("configUI", 收发配置ToolStripMenuItem.Checked.ToString());
+            root.AppendChild(UI);
 
             XmlElement serial = document.CreateElement("serial");
             serial.SetAttribute("baud", baudCombo.Text);
@@ -602,7 +692,7 @@ namespace myPort
             if (开始保存ToolStripMenuItem.Text.Equals("开始保存"))
             {
                 SaveFileDialog sfd = new SaveFileDialog();
-                sfd.Filter = "txt（*.txt）|*.txt";
+                sfd.Filter = "txt(*.txt)|*.txt";
                 //设置默认文件类型显示顺序 
                 sfd.FilterIndex = 1;
                 //保存对话框是否记忆上次打开的目录 
@@ -668,7 +758,7 @@ namespace myPort
         private void 保存图像数据ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "cvs（*.cvs）|*.cvs";
+            sfd.Filter = "cvs(*.cvs)|*.cvs";
             //设置默认文件类型显示顺序 
             sfd.FilterIndex = 1;
             //保存对话框是否记忆上次打开的目录 
@@ -875,13 +965,34 @@ namespace myPort
             }
 
         }
-        private void 关闭图像ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void uiButton9_Click(object sender, EventArgs e)
+        {
+            foreach (UILineSeries series in option.Series.Values)
+            {
+                series.Clear();
+            }
+            UIControl.SeriesClear();
+            option.XAxis.Min = 0;
+            option.XAxis.Max = 0;
+        }
+
+        private void 设置区十六进制ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            设置区十六进制ToolStripMenuItem.Checked = !设置区十六进制ToolStripMenuItem.Checked;
+
+        }
+
+        private void 接收区十六进制ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            接收区十六进制ToolStripMenuItem.Checked = !接收区十六进制ToolStripMenuItem.Checked;
+        }
+        private void 曲线ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             曲线ToolStripMenuItem.Checked = !曲线ToolStripMenuItem.Checked;
             menuUpdata();
 
         }
-        private void 仅显示图像ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void 命令ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             命令ToolStripMenuItem.Checked = !命令ToolStripMenuItem.Checked;
             menuUpdata();
@@ -995,6 +1106,19 @@ namespace myPort
                             chk >>= 8;
                         }
                     }
+                    else if (hexArray[i].Contains("chkxor"))//异或
+                    {
+                        if (高位在前ToolStripMenuItem.Checked)
+                        {
+                            chkindex++;
+                            num = (byte)((chk >> (obj.cmdLs[hexArray[i]] - chkindex) * 8) & 0xff);
+                        }
+                        else
+                        {
+                            num = (byte)(chk & 0xff);
+                            chk >>= 8;
+                        }
+                    }
                     else
                     {
                         string name = hexArray[i].Trim('%');
@@ -1019,6 +1143,7 @@ namespace myPort
                 else
                 {
                     num = Convert.ToByte(hexArray[i], 16);
+                    
                 }
                 vs.Add(num);
                 if (obj.cmdLs.ContainsKey("_chksum_param1"))
@@ -1028,9 +1153,27 @@ namespace myPort
                         chk += num;
                     }
                 }
+                else if (obj.cmdLs.ContainsKey("_chkxor_param1"))
+                {
+                    if (i >= obj.cmdLs["_chkxor_param1"] && i <= obj.cmdLs["_chkxor_param2"])
+                    {
+                        chk ^= num;
+                    }
+                }
             }
             byte[] data = vs.ToArray();
             sendData(data);
+        }
+        private SendObj findSendObjByName(List<SendObj> ls, string name)
+        {
+            foreach (SendObj send in ls)
+            {
+                if (send.sendName.Equals(name))
+                {
+                    return send;
+                }
+            }
+            return null;
         }
         private RecObj findRecObjByName(List<RecObj> ls, string name)
         {
@@ -1087,7 +1230,21 @@ namespace myPort
                 if (ls[i].valueChanged)
                 {
                     ls[i].recValue = ls[i].tempValue;
-                    recList.Rows[i].Cells[1].Value = (object)(Convert.ToString(ls[i].recValue, 16));
+                    // 如果接收发送变量名称相同,则发送变量值变为接收变量的值
+                    SendObj send = findSendObjByName(sendObjs, ls[i].recName);
+                    if(send != null)
+                    {
+                        send.sendValue = ls[i].recValue;
+                    }
+                    if(接收区十六进制ToolStripMenuItem.Checked)
+                    {
+                        recList.Rows[i].Cells[1].Value = (object)(Convert.ToString(ls[i].recValue, 16));
+                    }
+                    else
+                    {
+                        recList.Rows[i].Cells[1].Value = (object)(Convert.ToString(ls[i].recValue, 10));
+                    }
+                    
 
                     if (ls[i].recIsShow)
                     {
@@ -1130,6 +1287,7 @@ namespace myPort
                     {
                         string name = temp.Trim('%');
                         rec = findRecObjByName(recLs, name);
+                        
 
                         if (rec != null)
                         {
@@ -1170,6 +1328,7 @@ namespace myPort
                             {
                                 if (cmd.timerIsStart == false)
                                 {
+                                    
                                     cmd.cmdTimer.Start();
                                 }
                             }
@@ -1263,8 +1422,14 @@ namespace myPort
                 }
                 else if (e.ColumnIndex == 1)
                 {
-
-                    sendObjs[e.RowIndex].sendValue = Int32.Parse((string)sendList.Rows[e.RowIndex].Cells[1].FormattedValue, System.Globalization.NumberStyles.HexNumber);
+                    if(设置区十六进制ToolStripMenuItem.Checked)
+                    {
+                        sendObjs[e.RowIndex].sendValue = Int32.Parse((string)sendList.Rows[e.RowIndex].Cells[1].FormattedValue, System.Globalization.NumberStyles.HexNumber);
+                    }
+                    else
+                    {
+                        sendObjs[e.RowIndex].sendValue = Int32.Parse((string)sendList.Rows[e.RowIndex].Cells[1].FormattedValue, System.Globalization.NumberStyles.Integer);
+                    }
                 }
             }
         }
@@ -1307,6 +1472,15 @@ namespace myPort
                             string[] x = getFuncParam(hexArray[i]);
                             cmd.cmdLs.Add("_chksum_param1", Convert.ToByte(x[0]));
                             cmd.cmdLs.Add("_chksum_param2", Convert.ToByte(x[1]));
+                        }
+                    }
+                    else if (hexArray[i].Contains("chkxor"))
+                    {
+                        if (!cmd.cmdLs.ContainsKey("_chkxor_param1"))
+                        {
+                            string[] x = getFuncParam(hexArray[i]);
+                            cmd.cmdLs.Add("_chkxor_param1", Convert.ToByte(x[0]));
+                            cmd.cmdLs.Add("_chkxor_param2", Convert.ToByte(x[1]));
                         }
                     }
                 }
@@ -1417,7 +1591,7 @@ namespace myPort
                     tcpServer.Listen(100);//设置客户端最大连接数
                     tcpSerThread = new Thread(tcpServerThread);//开启线程执行循环接收消息
                     tcpSerThread.Start();
-                    Console.WriteLine("服务器已启动，等待连接.........");
+                    Console.WriteLine("服务器已启动,等待连接.........");
                     uiButton3.Text = "断开";
 
                 }
@@ -1605,6 +1779,11 @@ namespace myPort
             }
         }
 
-        
+        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+
     }
 }

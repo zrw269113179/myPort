@@ -30,22 +30,22 @@ namespace myPort
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle22 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle25 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle26 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle27 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle28 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle31 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle32 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle29 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle30 = new System.Windows.Forms.DataGridViewCellStyle();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.串口配置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.刷新端口ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -66,6 +66,8 @@ namespace myPort
             this.设置参数ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.接收参数ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.收发配置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.设置区十六进制ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.接收区十六进制ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.数据保存ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.开始保存ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.保存图像数据ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -74,13 +76,6 @@ namespace myPort
             this.禁止加载ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.LineChart = new Sunny.UI.UILineChart();
-            this.cmdList = new Sunny.UI.UIDataGridView();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cmdSend = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.cmdTimer = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.cmdTimerParam = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.recList = new Sunny.UI.UIDataGridView();
             this.recName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.recValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -88,8 +83,18 @@ namespace myPort
             this.sendList = new Sunny.UI.UIDataGridView();
             this.sendName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sendValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cmdList = new Sunny.UI.UIDataGridView();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cmdSend = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.cmdTimer = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.cmdTimerParam = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.splitContainer4 = new System.Windows.Forms.SplitContainer();
+            this.LineChart = new Sunny.UI.UILineChart();
+            this.uiButton9 = new Sunny.UI.UIButton();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.socketCliPanel = new System.Windows.Forms.Panel();
+            this.uiButton8 = new Sunny.UI.UIButton();
             this.uiButton6 = new Sunny.UI.UIButton();
             this.uiButton5 = new Sunny.UI.UIButton();
             this.uiLabel4 = new Sunny.UI.UILabel();
@@ -120,16 +125,19 @@ namespace myPort
             this.serialPort = new System.IO.Ports.SerialPort(this.components);
             this.sendObjBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.recObjBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.uiButton8 = new Sunny.UI.UIButton();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.cmdList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.recList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sendList)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmdList)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
+            this.splitContainer4.Panel1.SuspendLayout();
+            this.splitContainer4.Panel2.SuspendLayout();
+            this.splitContainer4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
@@ -275,7 +283,9 @@ namespace myPort
             this.命令ToolStripMenuItem,
             this.设置参数ToolStripMenuItem,
             this.接收参数ToolStripMenuItem,
-            this.收发配置ToolStripMenuItem});
+            this.收发配置ToolStripMenuItem,
+            this.设置区十六进制ToolStripMenuItem,
+            this.接收区十六进制ToolStripMenuItem});
             this.图像配置ToolStripMenuItem.Name = "图像配置ToolStripMenuItem";
             this.图像配置ToolStripMenuItem.Size = new System.Drawing.Size(68, 21);
             this.图像配置ToolStripMenuItem.Text = "界面配置";
@@ -285,25 +295,25 @@ namespace myPort
             this.曲线ToolStripMenuItem.Checked = true;
             this.曲线ToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.曲线ToolStripMenuItem.Name = "曲线ToolStripMenuItem";
-            this.曲线ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.曲线ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.曲线ToolStripMenuItem.Text = "曲线";
-            this.曲线ToolStripMenuItem.Click += new System.EventHandler(this.关闭图像ToolStripMenuItem_Click);
+            this.曲线ToolStripMenuItem.Click += new System.EventHandler(this.曲线ToolStripMenuItem_Click);
             // 
             // 命令ToolStripMenuItem
             // 
             this.命令ToolStripMenuItem.Checked = true;
             this.命令ToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.命令ToolStripMenuItem.Name = "命令ToolStripMenuItem";
-            this.命令ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.命令ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.命令ToolStripMenuItem.Text = "命令";
-            this.命令ToolStripMenuItem.Click += new System.EventHandler(this.仅显示图像ToolStripMenuItem_Click);
+            this.命令ToolStripMenuItem.Click += new System.EventHandler(this.命令ToolStripMenuItem_Click);
             // 
             // 设置参数ToolStripMenuItem
             // 
             this.设置参数ToolStripMenuItem.Checked = true;
             this.设置参数ToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.设置参数ToolStripMenuItem.Name = "设置参数ToolStripMenuItem";
-            this.设置参数ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.设置参数ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.设置参数ToolStripMenuItem.Text = "设置参数";
             this.设置参数ToolStripMenuItem.Click += new System.EventHandler(this.设置参数ToolStripMenuItem_Click);
             // 
@@ -312,7 +322,7 @@ namespace myPort
             this.接收参数ToolStripMenuItem.Checked = true;
             this.接收参数ToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.接收参数ToolStripMenuItem.Name = "接收参数ToolStripMenuItem";
-            this.接收参数ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.接收参数ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.接收参数ToolStripMenuItem.Text = "接收参数";
             this.接收参数ToolStripMenuItem.Click += new System.EventHandler(this.接收参数ToolStripMenuItem_Click);
             // 
@@ -321,9 +331,27 @@ namespace myPort
             this.收发配置ToolStripMenuItem.Checked = true;
             this.收发配置ToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.收发配置ToolStripMenuItem.Name = "收发配置ToolStripMenuItem";
-            this.收发配置ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.收发配置ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.收发配置ToolStripMenuItem.Text = "收发配置";
             this.收发配置ToolStripMenuItem.Click += new System.EventHandler(this.收发配置ToolStripMenuItem_Click);
+            // 
+            // 设置区十六进制ToolStripMenuItem
+            // 
+            this.设置区十六进制ToolStripMenuItem.Checked = true;
+            this.设置区十六进制ToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.设置区十六进制ToolStripMenuItem.Name = "设置区十六进制ToolStripMenuItem";
+            this.设置区十六进制ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.设置区十六进制ToolStripMenuItem.Text = "设置区十六进制";
+            this.设置区十六进制ToolStripMenuItem.Click += new System.EventHandler(this.设置区十六进制ToolStripMenuItem_Click);
+            // 
+            // 接收区十六进制ToolStripMenuItem
+            // 
+            this.接收区十六进制ToolStripMenuItem.Checked = true;
+            this.接收区十六进制ToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.接收区十六进制ToolStripMenuItem.Name = "接收区十六进制ToolStripMenuItem";
+            this.接收区十六进制ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.接收区十六进制ToolStripMenuItem.Text = "接收区十六进制";
+            this.接收区十六进制ToolStripMenuItem.Click += new System.EventHandler(this.接收区十六进制ToolStripMenuItem_Click);
             // 
             // 数据保存ToolStripMenuItem
             // 
@@ -401,10 +429,10 @@ namespace myPort
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
-            this.tableLayoutPanel1.Controls.Add(this.LineChart, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.cmdList, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.recList, 3, 0);
             this.tableLayoutPanel1.Controls.Add(this.sendList, 2, 0);
+            this.tableLayoutPanel1.Controls.Add(this.cmdList, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.splitContainer4, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -412,123 +440,22 @@ namespace myPort
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(1033, 344);
             this.tableLayoutPanel1.TabIndex = 0;
-            // 
-            // LineChart
-            // 
-            this.LineChart.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LineChart.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
-            this.LineChart.Font = new System.Drawing.Font("微软雅黑", 12F);
-            this.LineChart.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(54)))), ((int)(((byte)(54)))));
-            this.LineChart.Location = new System.Drawing.Point(3, 3);
-            this.LineChart.MinimumSize = new System.Drawing.Size(1, 1);
-            this.LineChart.Name = "LineChart";
-            this.LineChart.Size = new System.Drawing.Size(407, 338);
-            this.LineChart.TabIndex = 5;
-            this.LineChart.MouseEnter += new System.EventHandler(this.LineChart_MouseEnter);
-            // 
-            // cmdList
-            // 
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(243)))), ((int)(((byte)(255)))));
-            this.cmdList.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            this.cmdList.BackgroundColor = System.Drawing.Color.White;
-            this.cmdList.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("微软雅黑", 8F);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.cmdList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-            this.cmdList.ColumnHeadersHeight = 32;
-            this.cmdList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            this.cmdList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewTextBoxColumn1,
-            this.dataGridViewTextBoxColumn2,
-            this.cmdSend,
-            this.cmdTimer,
-            this.cmdTimerParam});
-            this.cmdList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cmdList.EnableHeadersVisualStyles = false;
-            this.cmdList.Font = new System.Drawing.Font("微软雅黑", 12F);
-            this.cmdList.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(160)))), ((int)(((byte)(255)))));
-            this.cmdList.Location = new System.Drawing.Point(416, 3);
-            this.cmdList.Name = "cmdList";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(243)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("微软雅黑", 12F);
-            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(160)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.cmdList.RowHeadersDefaultCellStyle = dataGridViewCellStyle5;
-            this.cmdList.RowHeadersVisible = false;
-            dataGridViewCellStyle6.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("宋体", 8F);
-            this.cmdList.RowsDefaultCellStyle = dataGridViewCellStyle6;
-            this.cmdList.RowTemplate.Height = 23;
-            this.cmdList.SelectedIndex = -1;
-            this.cmdList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.cmdList.ShowGridLine = true;
-            this.cmdList.Size = new System.Drawing.Size(303, 338);
-            this.cmdList.TabIndex = 4;
-            this.cmdList.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.cmdList_CellBeginEdit);
-            this.cmdList.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.cmdList_CellContentClick);
-            this.cmdList.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.cmdList_RowsRemoved);
-            this.cmdList.Resize += new System.EventHandler(this.cmdList_Resize);
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.DataPropertyName = "sendName";
-            this.dataGridViewTextBoxColumn1.HeaderText = "命令名";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // dataGridViewTextBoxColumn2
-            // 
-            this.dataGridViewTextBoxColumn2.DataPropertyName = "sendValue";
-            this.dataGridViewTextBoxColumn2.HeaderText = "命令格式";
-            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            this.dataGridViewTextBoxColumn2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // cmdSend
-            // 
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.NullValue = "发送";
-            this.cmdSend.DefaultCellStyle = dataGridViewCellStyle3;
-            this.cmdSend.HeaderText = "发送";
-            this.cmdSend.Name = "cmdSend";
-            this.cmdSend.Text = "发送";
-            this.cmdSend.ToolTipText = "发送";
-            this.cmdSend.UseColumnTextForButtonValue = true;
-            // 
-            // cmdTimer
-            // 
-            this.cmdTimer.HeaderText = "连发";
-            this.cmdTimer.Name = "cmdTimer";
-            this.cmdTimer.ReadOnly = true;
-            // 
-            // cmdTimerParam
-            // 
-            dataGridViewCellStyle4.NullValue = "1000";
-            this.cmdTimerParam.DefaultCellStyle = dataGridViewCellStyle4;
-            this.cmdTimerParam.HeaderText = " 间隔";
-            this.cmdTimerParam.Name = "cmdTimerParam";
+            this.tableLayoutPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel1_Paint);
             // 
             // recList
             // 
-            dataGridViewCellStyle7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(243)))), ((int)(((byte)(255)))));
-            this.recList.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle17.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(243)))), ((int)(((byte)(255)))));
+            this.recList.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle17;
             this.recList.BackgroundColor = System.Drawing.Color.White;
             this.recList.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("微软雅黑", 8F);
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.recList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle18.Font = new System.Drawing.Font("微软雅黑", 8F);
+            dataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.recList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle18;
             this.recList.ColumnHeadersHeight = 32;
             this.recList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.recList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -541,18 +468,18 @@ namespace myPort
             this.recList.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(160)))), ((int)(((byte)(255)))));
             this.recList.Location = new System.Drawing.Point(879, 3);
             this.recList.Name = "recList";
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(243)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("微软雅黑", 12F);
-            dataGridViewCellStyle9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(160)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.recList.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle19.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(243)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle19.Font = new System.Drawing.Font("微软雅黑", 12F);
+            dataGridViewCellStyle19.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
+            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(160)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.recList.RowHeadersDefaultCellStyle = dataGridViewCellStyle19;
             this.recList.RowHeadersVisible = false;
-            dataGridViewCellStyle10.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("宋体", 8F);
-            this.recList.RowsDefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle20.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle20.Font = new System.Drawing.Font("宋体", 8F);
+            this.recList.RowsDefaultCellStyle = dataGridViewCellStyle20;
             this.recList.RowTemplate.Height = 23;
             this.recList.SelectedIndex = -1;
             this.recList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -589,49 +516,49 @@ namespace myPort
             // 
             // sendList
             // 
-            dataGridViewCellStyle11.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(243)))), ((int)(((byte)(255)))));
-            this.sendList.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle21.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(243)))), ((int)(((byte)(255)))));
+            this.sendList.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle21;
             this.sendList.BackgroundColor = System.Drawing.Color.White;
             this.sendList.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("微软雅黑", 8F);
-            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.sendList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle22.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle22.Font = new System.Drawing.Font("微软雅黑", 8F);
+            dataGridViewCellStyle22.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle22.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle22.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle22.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.sendList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle22;
             this.sendList.ColumnHeadersHeight = 32;
             this.sendList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.sendList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.sendName,
             this.sendValue});
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle14.Font = new System.Drawing.Font("微软雅黑", 10F);
-            dataGridViewCellStyle14.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
-            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.sendList.DefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle24.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle24.Font = new System.Drawing.Font("微软雅黑", 10F);
+            dataGridViewCellStyle24.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
+            dataGridViewCellStyle24.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle24.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle24.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.sendList.DefaultCellStyle = dataGridViewCellStyle24;
             this.sendList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.sendList.EnableHeadersVisualStyles = false;
             this.sendList.Font = new System.Drawing.Font("微软雅黑", 12F);
             this.sendList.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(160)))), ((int)(((byte)(255)))));
             this.sendList.Location = new System.Drawing.Point(725, 3);
             this.sendList.Name = "sendList";
-            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle15.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(243)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle15.Font = new System.Drawing.Font("微软雅黑", 12F);
-            dataGridViewCellStyle15.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
-            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(160)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.sendList.RowHeadersDefaultCellStyle = dataGridViewCellStyle15;
+            dataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle25.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(243)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle25.Font = new System.Drawing.Font("微软雅黑", 12F);
+            dataGridViewCellStyle25.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
+            dataGridViewCellStyle25.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(160)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle25.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle25.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.sendList.RowHeadersDefaultCellStyle = dataGridViewCellStyle25;
             this.sendList.RowHeadersVisible = false;
-            dataGridViewCellStyle16.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle16.Font = new System.Drawing.Font("宋体", 8F);
-            this.sendList.RowsDefaultCellStyle = dataGridViewCellStyle16;
+            dataGridViewCellStyle26.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle26.Font = new System.Drawing.Font("宋体", 8F);
+            this.sendList.RowsDefaultCellStyle = dataGridViewCellStyle26;
             this.sendList.RowTemplate.Height = 23;
             this.sendList.SelectedIndex = -1;
             this.sendList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -652,11 +579,145 @@ namespace myPort
             // sendValue
             // 
             this.sendValue.DataPropertyName = "sendValue";
-            dataGridViewCellStyle13.NullValue = "0";
-            this.sendValue.DefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle23.NullValue = "0";
+            this.sendValue.DefaultCellStyle = dataGridViewCellStyle23;
             this.sendValue.HeaderText = "数值";
             this.sendValue.Name = "sendValue";
             this.sendValue.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // cmdList
+            // 
+            dataGridViewCellStyle27.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(243)))), ((int)(((byte)(255)))));
+            this.cmdList.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle27;
+            this.cmdList.BackgroundColor = System.Drawing.Color.White;
+            this.cmdList.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
+            dataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle28.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle28.Font = new System.Drawing.Font("微软雅黑", 8F);
+            dataGridViewCellStyle28.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle28.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle28.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle28.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.cmdList.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle28;
+            this.cmdList.ColumnHeadersHeight = 32;
+            this.cmdList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.cmdList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn1,
+            this.dataGridViewTextBoxColumn2,
+            this.cmdSend,
+            this.cmdTimer,
+            this.cmdTimerParam});
+            this.cmdList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cmdList.EnableHeadersVisualStyles = false;
+            this.cmdList.Font = new System.Drawing.Font("微软雅黑", 12F);
+            this.cmdList.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(160)))), ((int)(((byte)(255)))));
+            this.cmdList.Location = new System.Drawing.Point(416, 3);
+            this.cmdList.Name = "cmdList";
+            dataGridViewCellStyle31.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle31.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(235)))), ((int)(((byte)(243)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle31.Font = new System.Drawing.Font("微软雅黑", 12F);
+            dataGridViewCellStyle31.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
+            dataGridViewCellStyle31.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(80)))), ((int)(((byte)(160)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle31.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle31.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.cmdList.RowHeadersDefaultCellStyle = dataGridViewCellStyle31;
+            this.cmdList.RowHeadersVisible = false;
+            dataGridViewCellStyle32.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle32.Font = new System.Drawing.Font("宋体", 8F);
+            this.cmdList.RowsDefaultCellStyle = dataGridViewCellStyle32;
+            this.cmdList.RowTemplate.Height = 23;
+            this.cmdList.SelectedIndex = -1;
+            this.cmdList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.cmdList.ShowGridLine = true;
+            this.cmdList.Size = new System.Drawing.Size(303, 338);
+            this.cmdList.TabIndex = 4;
+            this.cmdList.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.cmdList_CellBeginEdit);
+            this.cmdList.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.cmdList_CellContentClick);
+            this.cmdList.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.cmdList_RowsRemoved);
+            this.cmdList.Resize += new System.EventHandler(this.cmdList_Resize);
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.DataPropertyName = "sendName";
+            this.dataGridViewTextBoxColumn1.HeaderText = "命令名";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            this.dataGridViewTextBoxColumn2.DataPropertyName = "sendValue";
+            this.dataGridViewTextBoxColumn2.HeaderText = "命令格式";
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            this.dataGridViewTextBoxColumn2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // cmdSend
+            // 
+            dataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle29.NullValue = "发送";
+            this.cmdSend.DefaultCellStyle = dataGridViewCellStyle29;
+            this.cmdSend.HeaderText = "发送";
+            this.cmdSend.Name = "cmdSend";
+            this.cmdSend.Text = "发送";
+            this.cmdSend.ToolTipText = "发送";
+            this.cmdSend.UseColumnTextForButtonValue = true;
+            // 
+            // cmdTimer
+            // 
+            this.cmdTimer.HeaderText = "连发";
+            this.cmdTimer.Name = "cmdTimer";
+            this.cmdTimer.ReadOnly = true;
+            // 
+            // cmdTimerParam
+            // 
+            dataGridViewCellStyle30.NullValue = "1000";
+            this.cmdTimerParam.DefaultCellStyle = dataGridViewCellStyle30;
+            this.cmdTimerParam.HeaderText = " 间隔";
+            this.cmdTimerParam.Name = "cmdTimerParam";
+            // 
+            // splitContainer4
+            // 
+            this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer4.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.splitContainer4.Location = new System.Drawing.Point(3, 3);
+            this.splitContainer4.Name = "splitContainer4";
+            this.splitContainer4.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer4.Panel1
+            // 
+            this.splitContainer4.Panel1.Controls.Add(this.LineChart);
+            // 
+            // splitContainer4.Panel2
+            // 
+            this.splitContainer4.Panel2.Controls.Add(this.uiButton9);
+            this.splitContainer4.Size = new System.Drawing.Size(407, 338);
+            this.splitContainer4.SplitterDistance = 297;
+            this.splitContainer4.TabIndex = 5;
+            // 
+            // LineChart
+            // 
+            this.LineChart.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LineChart.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
+            this.LineChart.Font = new System.Drawing.Font("微软雅黑", 12F);
+            this.LineChart.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(54)))), ((int)(((byte)(54)))));
+            this.LineChart.Location = new System.Drawing.Point(0, 0);
+            this.LineChart.MinimumSize = new System.Drawing.Size(1, 1);
+            this.LineChart.Name = "LineChart";
+            this.LineChart.Size = new System.Drawing.Size(407, 297);
+            this.LineChart.Style = Sunny.UI.UIStyle.Custom;
+            this.LineChart.TabIndex = 5;
+            this.LineChart.MouseEnter += new System.EventHandler(this.LineChart_MouseEnter);
+            // 
+            // uiButton9
+            // 
+            this.uiButton9.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.uiButton9.Font = new System.Drawing.Font("微软雅黑", 12F);
+            this.uiButton9.Location = new System.Drawing.Point(0, 3);
+            this.uiButton9.MinimumSize = new System.Drawing.Size(1, 1);
+            this.uiButton9.Name = "uiButton9";
+            this.uiButton9.Size = new System.Drawing.Size(100, 35);
+            this.uiButton9.TabIndex = 0;
+            this.uiButton9.Text = "清空图像";
+            this.uiButton9.Click += new System.EventHandler(this.uiButton9_Click);
             // 
             // splitContainer2
             // 
@@ -693,6 +754,18 @@ namespace myPort
             this.socketCliPanel.Name = "socketCliPanel";
             this.socketCliPanel.Size = new System.Drawing.Size(175, 118);
             this.socketCliPanel.TabIndex = 6;
+            // 
+            // uiButton8
+            // 
+            this.uiButton8.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.uiButton8.Font = new System.Drawing.Font("微软雅黑", 10F);
+            this.uiButton8.Location = new System.Drawing.Point(3, 100);
+            this.uiButton8.MinimumSize = new System.Drawing.Size(1, 1);
+            this.uiButton8.Name = "uiButton8";
+            this.uiButton8.Size = new System.Drawing.Size(41, 15);
+            this.uiButton8.TabIndex = 6;
+            this.uiButton8.Text = "清空";
+            this.uiButton8.Click += new System.EventHandler(this.uiButton8_Click);
             // 
             // uiButton6
             // 
@@ -1100,18 +1173,6 @@ namespace myPort
             // 
             this.recObjBindingSource.DataSource = typeof(myPort.RecObj);
             // 
-            // uiButton8
-            // 
-            this.uiButton8.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.uiButton8.Font = new System.Drawing.Font("微软雅黑", 10F);
-            this.uiButton8.Location = new System.Drawing.Point(3, 100);
-            this.uiButton8.MinimumSize = new System.Drawing.Size(1, 1);
-            this.uiButton8.Name = "uiButton8";
-            this.uiButton8.Size = new System.Drawing.Size(41, 15);
-            this.uiButton8.TabIndex = 6;
-            this.uiButton8.Text = "清空";
-            this.uiButton8.Click += new System.EventHandler(this.uiButton8_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 21F);
@@ -1130,9 +1191,13 @@ namespace myPort
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.cmdList)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.recList)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.sendList)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cmdList)).EndInit();
+            this.splitContainer4.Panel1.ResumeLayout(false);
+            this.splitContainer4.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
+            this.splitContainer4.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
@@ -1231,6 +1296,10 @@ namespace myPort
         private Sunny.UI.UILabel uiLabel3;
         private Sunny.UI.UIButton uiButton7;
         private Sunny.UI.UIButton uiButton8;
+        private System.Windows.Forms.SplitContainer splitContainer4;
+        private Sunny.UI.UIButton uiButton9;
+        private System.Windows.Forms.ToolStripMenuItem 设置区十六进制ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 接收区十六进制ToolStripMenuItem;
     }
 }
 
