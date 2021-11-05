@@ -39,17 +39,21 @@ namespace myPort
             option.ToolTip.Visible = true;
             option.Title = null;
 
-            //option.XAxis.AxisLabel.DecimalCount = 1;
-            //option.XAxis.AxisLabel.AutoFormat = false;
-            //option.YAxis.AxisLabel.DecimalCount = 1;
-            //option.YAxis.AxisLabel.AutoFormat = false;
+            option.XAxis.AxisLabel.DecimalCount = 1;
+            option.XAxis.AxisLabel.AutoFormat = false;
+            option.YAxis.AxisLabel.DecimalCount = 1;
+            option.YAxis.AxisLabel.AutoFormat = false;
             option.Grid.Bottom = 30;
             option.Grid.Top = 30;
             option.Grid.Left = 30;
             option.Grid.Right = 30;
-            option.ToolTip.Visible = true;
-            option.YAxis.Scale = true;
-            option.XAxis.Scale = true;
+            option.XAxis.Min = 0;
+            option.XAxis.Max = 220;
+            option.XAxis.MaxAuto = false;
+            option.XAxis.MinAuto = false;
+            //option.ToolTip.Visible = true;
+            //option.YAxis.Scale = true;
+            //option.XAxis.Scale = true;
             LineChart.SetOption(option);
 
 
@@ -257,6 +261,7 @@ namespace myPort
                 {
                     收发配置ToolStripMenuItem.Checked = true;
                 }
+                splitContainer1.Panel2Collapsed = !收发配置ToolStripMenuItem.Checked;
                 menuUpdata();
             }
 
@@ -333,7 +338,14 @@ namespace myPort
                     send.sendName = xml.GetAttribute("sendName");
                     send.sendValue = Convert.ToInt32(xml.GetAttribute("sendValue"), 16);
                     sendObjs.Add(send);
-                    sendList.Rows.Add(send.sendName, xml.GetAttribute("sendValue"));
+                    if (设置区十六进制ToolStripMenuItem.Checked)
+                    {
+                        sendList.Rows.Add(send.sendName, Convert.ToString(send.sendValue,16));
+                    }
+                    else
+                    {
+                        sendList.Rows.Add(send.sendName, Convert.ToString(send.sendValue, 10));
+                    }
                 }
             }
 
@@ -373,6 +385,10 @@ namespace myPort
                     
 
                 }
+            }
+            foreach(UILineSeries ser in option.Series.Values)
+            {
+                ser.Smooth = false;
             }
             xmlReader.Close();
         }
@@ -489,17 +505,21 @@ namespace myPort
         public void GetComList()
         {
             RegistryKey keyCom = Registry.LocalMachine.OpenSubKey("Hardware\\DeviceMap\\SerialComm");
-            string[] sSubKeys = keyCom.GetValueNames();
-            string[] str = new string[sSubKeys.Length];
-            for (int i = 0; i < sSubKeys.Length; i++)
+            if(keyCom != null)
             {
-                str[i] = (string)keyCom.GetValue(sSubKeys[i]);
+                string[] sSubKeys = keyCom.GetValueNames();
+                string[] str = new string[sSubKeys.Length];
+                for (int i = 0; i < sSubKeys.Length; i++)
+                {
+                    str[i] = (string)keyCom.GetValue(sSubKeys[i]);
+                }
+                cmbPort.Items.Clear();
+                for (int i = 0; i < str.Length; i++)
+                {
+                    cmbPort.Items.Add(str[i]);
+                }
             }
-            cmbPort.Items.Clear();
-            for (int i = 0; i < str.Length; i++)
-            {
-                cmbPort.Items.Add(str[i]);
-            }
+            
 
         }
         bool isReceiving = false;/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
@@ -665,9 +685,9 @@ namespace myPort
                     UIControl.show += 1;
                     LineChart.Option.XAxis.Max += 1;
                     LineChart.Option.XAxis.Min += 1;
-                    LineChart.Option.XAxis.Max = UIControl.show + 20;
-                    LineChart.Option.XAxis.MaxAuto = false;
-                    LineChart.Option.XAxis.Min = UIControl.show - 200;
+                    //LineChart.Option.XAxis.Max = UIControl.show + 20;
+                    //LineChart.Option.XAxis.MaxAuto = false;
+                    //LineChart.Option.XAxis.Min = UIControl.show - 200;
                 }
 
 
@@ -679,9 +699,9 @@ namespace myPort
                     UIControl.show -= 1;
                     LineChart.Option.XAxis.Max -= 1;
                     LineChart.Option.XAxis.Min -= 1;
-                    LineChart.Option.XAxis.Max = UIControl.show + 20;
-                    LineChart.Option.XAxis.MaxAuto = false;
-                    LineChart.Option.XAxis.Min = UIControl.show - 200;
+                    //LineChart.Option.XAxis.Max = UIControl.show + 20;
+                    //LineChart.Option.XAxis.MaxAuto = false;
+                    //LineChart.Option.XAxis.Min = UIControl.show - 200;
                 }
             }
         }
@@ -721,9 +741,10 @@ namespace myPort
         /// <param name="fileName">CSV的文件路径</param>
         public void SaveDataTableCSV(string path, DataTable dt)
         {
-            FileStream fs = new FileStream(path, FileMode.Truncate| FileMode.OpenOrCreate, FileAccess.Write);
+            FileStream fs = new FileStream(path,  FileMode.OpenOrCreate, FileAccess.Write);
             StreamWriter sw = new StreamWriter(fs, Encoding.Default);
             StringBuilder sb = new StringBuilder();
+            fs.SetLength(0);
             sb.Clear();
 
             //写出列名称
@@ -972,8 +993,10 @@ namespace myPort
                 series.Clear();
             }
             UIControl.SeriesClear();
+            option.XAxis.Data.Clear();
+            option.YAxis.Data.Clear();
             option.XAxis.Min = 0;
-            option.XAxis.Max = 0;
+            option.XAxis.Max = 220;
         }
 
         private void 设置区十六进制ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1398,7 +1421,7 @@ namespace myPort
                         var series = option.AddSeries(new UILineSeries(recObjs[e.RowIndex].recSeriseName));
                         if(series != null)
                         {
-                            series.Smooth = true;
+                            series.Smooth = false;
                         }
                     }
                 }

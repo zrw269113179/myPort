@@ -55,6 +55,7 @@ namespace myPort
         static public void SeriesClear()
         {
             index = 0;
+            show = 0;
         }
         public delegate void SeriesAddPointDelegate(UILineChart txtInfo, string x, int value);
         static public void AddSeriesPoint(UILineChart txtInfo, string x, int value)
