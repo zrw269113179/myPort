@@ -1297,7 +1297,7 @@ namespace myPort
                 string[] hexArray = hex.Split(' ');
                 if (hexArray.Length != data.Length)
                 {
-                    return;
+                    continue;
                 }
                 byte value = 0;
                 RecObj rec = null;
