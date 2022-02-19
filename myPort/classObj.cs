@@ -34,4 +34,13 @@ namespace myPort
         public bool parsingCmd { get; set; }
         public string parsingCmdName { get; set; }
     }
+
+    public class FuncObj
+    {
+        public string str { get; set; }
+        public string name { get; set; }
+        public int arrIndex { get; set; }
+        public int arrLen { get; set; }
+        public int value { get; set; }
+    }
 }

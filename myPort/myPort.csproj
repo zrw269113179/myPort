@@ -82,6 +82,7 @@
     <Compile Include="CmdForm.Designer.cs">
       <DependentUpon>CmdForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Prase.cs" />
     <Compile Include="ProForm.cs">
       <SubType>Form</SubType>
     </Compile>

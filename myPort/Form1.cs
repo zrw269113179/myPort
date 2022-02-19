@@ -533,6 +533,7 @@ namespace myPort
                 button1.Text = "打开串口";
                 serialPort.DiscardInBuffer();
                 serialPort.DiscardOutBuffer();
+
                 while (isReceiving) Application.DoEvents();
                 serialPort.Close();
 
@@ -545,6 +546,7 @@ namespace myPort
                 isReceiving = false;
                 cmbPort.Enabled = false;
                 baudCombo.Enabled = false;
+                serialPort.ReadTimeout = 5;
                 button1.Text = "关闭串口";
             }
         }
@@ -704,6 +706,7 @@ namespace myPort
                     //LineChart.Option.XAxis.Min = UIControl.show - 200;
                 }
             }
+            LineChart.Refresh();
         }
 
         private bool needSave = false;
@@ -997,6 +1000,7 @@ namespace myPort
             option.YAxis.Data.Clear();
             option.XAxis.Min = 0;
             option.XAxis.Max = 220;
+            LineChart.Refresh();
         }
 
         private void 设置区十六进制ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1061,6 +1065,20 @@ namespace myPort
         #endregion
 
         #region 数据匹配
+        private FileInfo find_py(string name)
+        {
+            string rootPath = Directory.GetCurrentDirectory() + "\\function";
+            name = name + ".py";
+            DirectoryInfo root = new DirectoryInfo(rootPath);
+            foreach (FileInfo f in root.GetFiles())
+            {
+                if( name == f.Name)
+                {
+                    return f;
+                }
+            }
+            return null;
+        }
         private void sendTempClear(List<SendObj> ls)
         {
             foreach (SendObj rec in ls)
@@ -1110,80 +1128,126 @@ namespace myPort
             sendTempClear(sendObjs);
             int chk = 0;
             int chkindex = 0;
+            List<FuncObj> funcObjs = new List<FuncObj>();
+            // 填入数值
             for (int i = 0; i < hexArray.Length; ++i)
             {
                 byte num = 0;
-
                 if (hexArray[i].Contains('%'))
                 {
-                    if (hexArray[i].Contains("chksum"))//校验和
+                    string nameTemp = hexArray[i].Trim('%');
+                    foreach (SendObj send in sendObjs)
                     {
-                        if (高位在前ToolStripMenuItem.Checked)
+                        int numIndex = nameTemp.IndexOf(':');
+                        int byteNum = 1;
+                        string name;
+                        if (numIndex >= 0)
                         {
-                            chkindex++;
-                            num = (byte)((chk >> (obj.cmdLs[hexArray[i]] - chkindex) * 8) & 0xff);
+                            name = nameTemp.Substring(0, numIndex);
+                            byteNum = Convert.ToInt32(nameTemp.Substring(numIndex + 1));
                         }
                         else
                         {
-                            num = (byte)(chk & 0xff);
-                            chk >>= 8;
+                            name = nameTemp;
                         }
-                    }
-                    else if (hexArray[i].Contains("chkxor"))//异或
-                    {
-                        if (高位在前ToolStripMenuItem.Checked)
+                        if (name.Equals(send.sendName))
                         {
-                            chkindex++;
-                            num = (byte)((chk >> (obj.cmdLs[hexArray[i]] - chkindex) * 8) & 0xff);
-                        }
-                        else
-                        {
-                            num = (byte)(chk & 0xff);
-                            chk >>= 8;
-                        }
-                    }
-                    else
-                    {
-                        string name = hexArray[i].Trim('%');
-                        foreach (SendObj send in sendObjs)
-                        {
-                            if (name.Equals(send.sendName))
+                            for(int j = 0;j<byteNum;j++)
                             {
                                 if (高位在前ToolStripMenuItem.Checked)
                                 {
                                     send.tempIndex++;
-                                    num = (byte)((send.sendValue >> (obj.cmdLs[hexArray[i]] - send.tempIndex) * 8) & 0xff);
+                                    num = (byte)((send.sendValue >> (byteNum - send.tempIndex) * 8) & 0xff);
                                 }
                                 else
                                 {
                                     num = (byte)(send.tempValue & 0xff);
                                     send.tempValue >>= 8;
                                 }
+                                vs.Add(num);
                             }
                         }
+                    }
+                }
+                else if(hexArray[i].Contains('$'))
+                {
+                    string nameTemp = hexArray[i].Trim('$');
+                    int numIndex = nameTemp.IndexOf(':');
+                    int byteNum = 1;
+                    string name;
+                    if (numIndex >= 0)
+                    {
+                        name = nameTemp.Substring(0, numIndex);
+                        byteNum = Convert.ToInt32(nameTemp.Substring(numIndex + 1));
+                    }
+                    else
+                    {
+                        name = nameTemp;
+                    }
+                    FuncObj func = new FuncObj();
+                    func.arrIndex = vs.Count;
+                    func.arrLen = byteNum;
+                    int paramIndex = name.IndexOf('(');
+                    if(paramIndex >= 0)
+                    {
+                        name = name.Substring(0,paramIndex);
+                    }
+                    func.name = name;
+                    func.str = nameTemp;
+                    funcObjs.Add(func);
+                    for(int j = 0;j< byteNum;j++)
+                    {
+                        vs.Add(0);
                     }
                 }
                 else
                 {
                     num = Convert.ToByte(hexArray[i], 16);
-                    
-                }
-                vs.Add(num);
-                if (obj.cmdLs.ContainsKey("_chksum_param1"))
-                {
-                    if (i >= obj.cmdLs["_chksum_param1"] && i <= obj.cmdLs["_chksum_param2"])
-                    {
-                        chk += num;
-                    }
-                }
-                else if (obj.cmdLs.ContainsKey("_chkxor_param1"))
-                {
-                    if (i >= obj.cmdLs["_chkxor_param1"] && i <= obj.cmdLs["_chkxor_param2"])
-                    {
-                        chk ^= num;
-                    }
+                    vs.Add(num);
                 }
             }
+
+            // 查找func脚本
+            foreach(FuncObj funcObj in funcObjs)
+            {
+                FileInfo f = find_py(funcObj.name);
+                try
+                {
+                    if (f != null)
+                    {
+                        ScriptEngine pyEngine = Python.CreateEngine();//创建Python解释器对象
+                        dynamic pyFunc = pyEngine.ExecuteFile(f.FullName);//读取脚本文件
+                        if (pyFunc != null)
+                        {
+                            int l = funcObj.str.IndexOf('(');
+                            int r = funcObj.str.IndexOf(')');
+                            string param = funcObj.str.Substring(l + 1, r - l - 1);
+                            string[] pList = param.Split(',');
+                            int value = pyFunc.main(vs.ToArray(), pList);
+                            for (int j = 0; j < funcObj.arrLen; j++)
+                            {
+                                byte num = 0;
+                                if (高位在前ToolStripMenuItem.Checked)
+                                {
+                                    num = (byte)((value >> (funcObj.arrLen - j - 1) * 8) & 0xff);
+                                }
+                                else
+                                {
+                                    num = (byte)(value & 0xff);
+                                    value >>= 8;
+                                }
+                                vs[funcObj.arrIndex + j] = num;
+                            }
+                        }
+
+                    }
+                }
+                catch(Exception e)
+                {
+                    MessageBox.Show("脚本运行错误"+e.Message);
+                }
+            }
+            
             byte[] data = vs.ToArray();
             sendData(data);
         }
@@ -1279,7 +1343,6 @@ namespace myPort
                             //series.Points.AddY(ls[i].recValue);
                         }
 
-
                         //chartI.Add(i);
                         //Task t = Task.Factory.StartNew(()=>addPointToChart());
                     }
@@ -1293,52 +1356,133 @@ namespace myPort
             foreach (ParsingObj obj in ls)
             {
                 int i = 0;
+                int allLen = 0;
                 string hex = obj.parsingStr.Trim();
                 string[] hexArray = hex.Split(' ');
-                if (hexArray.Length != data.Length)
-                {
-                    continue;
-                }
+                //if (hexArray.Length != data.Length)
+                //{
+                //    continue;
+                //}
                 byte value = 0;
                 RecObj rec = null;
-
+                List<FuncObj> funcObjs = new List<FuncObj>();
                 for (i = 0; i < hexArray.Length; ++i)
                 {
                     string temp = hexArray[i];
 
                     if (temp.Contains('%'))// 变量匹配
                     {
-                        string name = temp.Trim('%');
+                        
+                        string nameTemp = temp.Trim('%');
+                        int numIndex = nameTemp.IndexOf(':');
+                        int num = 1;
+                        string name;
+                        if(numIndex >= 0)
+                        {
+                            name = nameTemp.Substring(0, numIndex);
+                            num = Convert.ToInt32(nameTemp.Substring(numIndex+1));
+                        }
+                        else
+                        {
+                            name = nameTemp;
+                        }
+
                         rec = findRecObjByName(recLs, name);
                         
-
                         if (rec != null)
                         {
                             rec.valueChanged = true;
-                            if (高位在前ToolStripMenuItem.Checked)
+                            for(int j = 0; j < num;j++)
                             {
-                                rec.tempValue = rec.tempValue << 8;
-                                rec.tempValue += data[i];
+                                if (高位在前ToolStripMenuItem.Checked)
+                                {
+                                    rec.tempValue = rec.tempValue << 8;
+                                    rec.tempValue += data[i + j];
+
+                                }
+                                else
+                                {
+                                    rec.tempValue += data[i + j] << (8 * rec.tempIndex);
+                                    rec.tempIndex++;
+                                }
+                            }
+                        }
+                        allLen += num;
+                    }
+                    else if (hexArray[i].Contains('$'))
+                    {
+                        string nameTemp = hexArray[i].Trim('$');
+                        int numIndex = nameTemp.IndexOf(':');
+                        int byteNum = 1;
+                        string name;
+                        if (numIndex >= 0)
+                        {
+                            name = nameTemp.Substring(0, numIndex);
+                            byteNum = Convert.ToInt32(nameTemp.Substring(numIndex + 1));
+                        }
+                        else
+                        {
+                            name = nameTemp;
+                        }
+                        int paramIndex = name.IndexOf('(');
+                        if (paramIndex >= 0)
+                        {
+                            name = name.Substring(0, paramIndex);
+                        }
+                        // 执行脚本
+                        FileInfo f = find_py(name);
+                        try
+                        {
+                            if (f != null)
+                            {
+                                ScriptEngine pyEngine = Python.CreateEngine();//创建Python解释器对象
+                                dynamic pyFunc = pyEngine.ExecuteFile(f.FullName);//读取脚本文件
+                                if (pyFunc != null)
+                                {
+                                    int l = nameTemp.IndexOf('(');
+                                    int r = nameTemp.IndexOf(')');
+                                    string param = nameTemp.Substring(l + 1, r - l - 1);
+                                    string[] pList = param.Split(',');
+                                    int pyValue = pyFunc.main(data, pList);
+                                    for (int j = 0; j < byteNum; j++)
+                                    {
+                                        byte num = 0;
+                                        if (高位在前ToolStripMenuItem.Checked)
+                                        {
+                                            num = (byte)((pyValue >> (byteNum - j - 1) * 8) & 0xff);
+                                        }
+                                        else
+                                        {
+                                            num = (byte)(pyValue & 0xff);
+                                            value >>= 8;
+                                        }
+                                        if(num != data[allLen + j])
+                                        {
+                                            goto unparse;
+                                        }
+                                    }
+                                    allLen += byteNum;
+                                }
 
                             }
-                            else
-                            {
-                                rec.tempValue += data[i] << (8 * rec.tempIndex);
-                                rec.tempIndex++;
-                            }
-
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show("脚本运行错误" + e.Message);
                         }
                     }
                     else // 数值匹配
                     {
                         value = Convert.ToByte(temp, 16);
+                        allLen++;
                         if (value != data[i])
                         {
                             break;
                         }
                     }
                 }
-                if (i == hexArray.Length)// 匹配成功
+            unparse:
+                if (allLen == data.Length)// 匹配成功
                 {
                     recTempApply(recLs);
                     if (obj.parsingCmd)
@@ -1357,9 +1501,9 @@ namespace myPort
                             }
                         }
                     }
-
                     break;
                 }
+                
             }
 
         }
@@ -1589,9 +1733,10 @@ namespace myPort
             }
         }
 
+
         #endregion
 
-        
+
         #region TCP相关
         public List<Client> clientList = new List<Client>();
         Socket tcpServer;

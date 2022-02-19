@@ -2,22 +2,21 @@
 <setup>
   <dataformat format="True" />
   <script path="F:\vs2019 project\myPort_SunnyUI\myPort\bin\Release\data.py" needScript="False" />
-  <serial baud="9600" com="COM9" />
+  <UI recHex="True" sendHex="True" recUI="True" setUI="True" chartUI="True" cmdUI="True" configUI="True" />
+  <serial baud="115200" com="COM2" />
   <client IP="127.0.0.1" port="777" />
-  <service IP="192.168.1.100" port="9000" />
-  <portChoose choose="3" />
+  <service IP="127.0.0.1" port="9000" />
+  <portChoose choose="2" />
   <recList>
     <rec recName="接收数据" recIsShow="True" />
   </recList>
   <parsingList>
-    <parsing parsingName="a" parsingStr="FB 01 %接收数据 %接收数据 %接收数据 %接收数据 %a FC" parsingCmd="True" parsingCmdName="回复" />
-    <parsing parsingName="" parsingStr="" parsingCmd="False" parsingCmdName="" />
+    <parsing parsingName="a" parsingStr="FB 01 %接收数据:4 $chksum(1,5) FC" parsingCmd="True" parsingCmdName="回复" />
   </parsingList>
   <sendList>
     <send sendName="设置数据" sendValue="1234" />
   </sendList>
   <cmdList>
-    <cmd cmdName="回复" cmdStr="FC 81 %设置数据 %设置数据 %chksum(1,3) FB" time="1000" timerNeed="False" />
-    <cmd cmdName="" cmdStr="" time="1000" timerNeed="False" />
+    <cmd cmdName="回复" cmdStr="FC 81 %设置数据:2 $chksum(1,3) FB" time="1000" timerNeed="False" />
   </cmdList>
 </setup>
