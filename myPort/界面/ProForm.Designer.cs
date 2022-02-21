@@ -50,7 +50,7 @@ namespace myPort
             this.proName.Minimum = -2147483648D;
             this.proName.MinimumSize = new System.Drawing.Size(1, 1);
             this.proName.Name = "proName";
-            this.proName.Size = new System.Drawing.Size(614, 29);
+            this.proName.Size = new System.Drawing.Size(614, 34);
             this.proName.TabIndex = 0;
             this.proName.Text = "uiTextBox1";
             this.proName.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
@@ -83,7 +83,7 @@ namespace myPort
             this.replyName.Minimum = -2147483648D;
             this.replyName.MinimumSize = new System.Drawing.Size(1, 1);
             this.replyName.Name = "replyName";
-            this.replyName.Size = new System.Drawing.Size(569, 29);
+            this.replyName.Size = new System.Drawing.Size(569, 34);
             this.replyName.TabIndex = 2;
             this.replyName.Text = "uiTextBox3";
             this.replyName.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
@@ -146,9 +146,10 @@ namespace myPort
             // 
             // ProForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 21F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 27F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(695, 384);
+            this.ControlBox = false;
             this.Controls.Add(this.uiButton2);
             this.Controls.Add(this.uiButton1);
             this.Controls.Add(this.reply);
@@ -157,8 +158,10 @@ namespace myPort
             this.Controls.Add(this.replyName);
             this.Controls.Add(this.proStr);
             this.Controls.Add(this.proName);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "ProForm";
-            this.Text = "ProForm";
+            this.Text = "接收协议";
             this.TopMost = true;
             this.ResumeLayout(false);
 

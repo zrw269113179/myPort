@@ -70,7 +70,7 @@ namespace myPort
             this.cmdName.Minimum = -2147483648D;
             this.cmdName.MinimumSize = new System.Drawing.Size(1, 1);
             this.cmdName.Name = "cmdName";
-            this.cmdName.Size = new System.Drawing.Size(601, 29);
+            this.cmdName.Size = new System.Drawing.Size(601, 34);
             this.cmdName.TabIndex = 2;
             this.cmdName.Text = "uiTextBox1";
             this.cmdName.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
@@ -116,7 +116,7 @@ namespace myPort
             this.timerTime.Minimum = -2147483648D;
             this.timerTime.MinimumSize = new System.Drawing.Size(1, 1);
             this.timerTime.Name = "timerTime";
-            this.timerTime.Size = new System.Drawing.Size(574, 29);
+            this.timerTime.Size = new System.Drawing.Size(574, 34);
             this.timerTime.TabIndex = 5;
             this.timerTime.Text = "1000";
             this.timerTime.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
@@ -147,9 +147,10 @@ namespace myPort
             // 
             // CmdForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 21F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 27F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(695, 384);
+            this.ControlBox = false;
             this.Controls.Add(this.uiButton2);
             this.Controls.Add(this.uiButton1);
             this.Controls.Add(this.timerTime);
@@ -158,6 +159,8 @@ namespace myPort
             this.Controls.Add(this.cmdName);
             this.Controls.Add(this.uiLabel2);
             this.Controls.Add(this.uiLabel1);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "CmdForm";
             this.Text = "命令详情";
             this.TopMost = true;

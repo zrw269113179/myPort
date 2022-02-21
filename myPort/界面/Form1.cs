@@ -22,13 +22,15 @@ namespace myPort
 {
     public partial class Form1 : Sunny.UI.UIForm
     {
-        public List<RecObj> recObjs = new List<RecObj>();
-        public List<SendObj> sendObjs = new List<SendObj>();
-        public List<CmdObj> cmdObjs = new List<CmdObj>();
-        public List<ParsingObj> parsingObjs = new List<ParsingObj>();
+
+
+        public Parse parse;
         public bool isRecHex = true;
         public bool isSendHex = true;
         UILineOption option = new UILineOption();
+        dynamic pyScript;
+        string scriptPath;
+        bool needScript = false;
         public Form1()
         {
             InitializeComponent();
@@ -79,7 +81,10 @@ namespace myPort
             recList.AllowUserToAddRows = true;
             serialPort.ReadTimeout = 500;/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 
+            parse = new Parse(this);
+
         }
+        
         #region 参数操作
         private void 导出ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -290,7 +295,7 @@ namespace myPort
             {
                 XmlElement element = (XmlElement)node;//为了可以使用属性存储信息,我们把XmlNode转化为XmlElement.
                 XmlNodeList recs = element.ChildNodes;
-                recObjs.Clear();
+                parse.recObjs.Clear();
                 recList.Rows.Clear();
                 foreach (XmlElement xml in recs)
                 {
@@ -302,7 +307,7 @@ namespace myPort
                     {
                         option.AddSeries(rec.recSeriseName);
                     }
-                    recObjs.Add(rec);
+                    parse.recObjs.Add(rec);
                     recList.Rows.Add(rec.recName, 0, rec.recIsShow);
                 }
             }
@@ -312,7 +317,7 @@ namespace myPort
             {
                 XmlElement parsingelement = (XmlElement)parsingNode;//为了可以使用属性存储信息,我们把XmlNode转化为XmlElement.
                 XmlNodeList parsings = parsingelement.ChildNodes;
-                parsingObjs.Clear();
+                parse.parsingObjs.Clear();
                 foreach (XmlElement xml in parsings)
                 {
                     ParsingObj parsing = new ParsingObj();
@@ -321,7 +326,7 @@ namespace myPort
                     parsing.parsingCmdName = xml.GetAttribute("parsingCmdName");
                     parsing.parsingName = xml.GetAttribute("parsingName");
                     parsing.parsingCmd = xml.GetAttribute("parsingCmd") == "True" ? true : false;
-                    parsingObjs.Add(parsing);
+                    parse.parsingObjs.Add(parsing);
                 }
             }
 
@@ -330,14 +335,14 @@ namespace myPort
             {
                 XmlElement sendelement = (XmlElement)sendNode;//为了可以使用属性存储信息,我们把XmlNode转化为XmlElement.
                 XmlNodeList sends = sendelement.ChildNodes;
-                sendObjs.Clear();
+                parse.sendObjs.Clear();
                 sendList.Rows.Clear();
                 foreach (XmlElement xml in sends)
                 {
                     SendObj send = new SendObj();
                     send.sendName = xml.GetAttribute("sendName");
                     send.sendValue = Convert.ToInt32(xml.GetAttribute("sendValue"), 16);
-                    sendObjs.Add(send);
+                    parse.sendObjs.Add(send);
                     if (设置区十六进制ToolStripMenuItem.Checked)
                     {
                         sendList.Rows.Add(send.sendName, Convert.ToString(send.sendValue,16));
@@ -354,7 +359,7 @@ namespace myPort
             {
                 XmlElement cmdelement = (XmlElement)cmdNode;//为了可以使用属性存储信息,我们把XmlNode转化为XmlElement.
                 XmlNodeList cmds = cmdelement.ChildNodes;
-                cmdObjs.Clear();
+                parse.cmdObjs.Clear();
                 cmdList.Rows.Clear();
                 foreach (XmlElement xml in cmds)
                 {
@@ -380,7 +385,7 @@ namespace myPort
                         cmd.timerNeed = temp == "True" ? true : false;
 
                     parseCmd(cmd);
-                    cmdObjs.Add(cmd);
+                    parse.cmdObjs.Add(cmd);
                     cmdList.Rows.Add(cmd.cmdName, cmd.cmdStr,null,cmd.timerNeed,cmd.time);
                     
 
@@ -448,49 +453,49 @@ namespace myPort
             // recList
             XmlElement recs = document.CreateElement("recList");
             root.AppendChild(recs);
-            for (int i = 0; i < recObjs.Count; i++)
+            for (int i = 0; i < parse.recObjs.Count; i++)
             {
                 XmlElement rec = document.CreateElement("rec");
 
-                rec.SetAttribute("recName", recObjs[i].recName);
-                rec.SetAttribute("recIsShow", recObjs[i].recIsShow.ToString());
+                rec.SetAttribute("recName", parse.recObjs[i].recName);
+                rec.SetAttribute("recIsShow", parse.recObjs[i].recIsShow.ToString());
                 recs.AppendChild(rec);
             }
 
             XmlElement parsings = document.CreateElement("parsingList");
             root.AppendChild(parsings);
-            for (int i = 0; i < parsingObjs.Count; i++)
+            for (int i = 0; i < parse.parsingObjs.Count; i++)
             {
                 XmlElement parsing = document.CreateElement("parsing");
 
-                parsing.SetAttribute("parsingName", parsingObjs[i].parsingName);
-                parsing.SetAttribute("parsingStr", parsingObjs[i].parsingStr);
-                parsing.SetAttribute("parsingCmd", parsingObjs[i].parsingCmd.ToString());
-                parsing.SetAttribute("parsingCmdName", parsingObjs[i].parsingCmdName);
+                parsing.SetAttribute("parsingName", parse.parsingObjs[i].parsingName);
+                parsing.SetAttribute("parsingStr", parse.parsingObjs[i].parsingStr);
+                parsing.SetAttribute("parsingCmd", parse.parsingObjs[i].parsingCmd.ToString());
+                parsing.SetAttribute("parsingCmdName", parse.parsingObjs[i].parsingCmdName);
                 parsings.AppendChild(parsing);
             }
 
             XmlElement sends = document.CreateElement("sendList");
             root.AppendChild(sends);
-            for (int i = 0; i < sendObjs.Count; i++)
+            for (int i = 0; i < parse.sendObjs.Count; i++)
             {
                 XmlElement send = document.CreateElement("send");
 
-                send.SetAttribute("sendName", sendObjs[i].sendName);
-                send.SetAttribute("sendValue", Convert.ToString(sendObjs[i].sendValue, 16));
+                send.SetAttribute("sendName", parse.sendObjs[i].sendName);
+                send.SetAttribute("sendValue", Convert.ToString(parse.sendObjs[i].sendValue, 16));
                 sends.AppendChild(send);
             }
 
             XmlElement cmds = document.CreateElement("cmdList");
             root.AppendChild(cmds);
-            for (int i = 0; i < cmdObjs.Count; i++)
+            for (int i = 0; i < parse.cmdObjs.Count; i++)
             {
                 XmlElement cmd = document.CreateElement("cmd");
 
-                cmd.SetAttribute("cmdName", cmdObjs[i].cmdName);
-                cmd.SetAttribute("cmdStr", cmdObjs[i].cmdStr);
-                cmd.SetAttribute("time", Convert.ToString(cmdObjs[i].time));
-                cmd.SetAttribute("timerNeed", cmdObjs[i].timerNeed.ToString());
+                cmd.SetAttribute("cmdName", parse.cmdObjs[i].cmdName);
+                cmd.SetAttribute("cmdStr", parse.cmdObjs[i].cmdStr);
+                cmd.SetAttribute("time", Convert.ToString(parse.cmdObjs[i].time));
+                cmd.SetAttribute("timerNeed", parse.cmdObjs[i].timerNeed.ToString());
                 cmds.AppendChild(cmd);
             }
 
@@ -498,182 +503,61 @@ namespace myPort
 
         }
         #endregion
-        #region 串口操作
-        /// <summary>
-        /// 从注册表获取系统串口列表
-        /// </summary>
-        public void GetComList()
-        {
-            RegistryKey keyCom = Registry.LocalMachine.OpenSubKey("Hardware\\DeviceMap\\SerialComm");
-            if(keyCom != null)
-            {
-                string[] sSubKeys = keyCom.GetValueNames();
-                string[] str = new string[sSubKeys.Length];
-                for (int i = 0; i < sSubKeys.Length; i++)
-                {
-                    str[i] = (string)keyCom.GetValue(sSubKeys[i]);
-                }
-                cmbPort.Items.Clear();
-                for (int i = 0; i < str.Length; i++)
-                {
-                    cmbPort.Items.Add(str[i]);
-                }
-            }
-            
 
-        }
-        bool isReceiving = false;/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-        private void button1_Click(object sender, EventArgs e)
-        {
-            if (serialPort.IsOpen)
-            {
-
-                cmbPort.Enabled = true;
-                baudCombo.Enabled = true;
-                button1.Text = "打开串口";
-                serialPort.DiscardInBuffer();
-                serialPort.DiscardOutBuffer();
-
-                while (isReceiving) Application.DoEvents();
-                serialPort.Close();
-
-            }
-            else
-            {
-                serialPort.BaudRate = Convert.ToInt32(baudCombo.Text);
-                serialPort.PortName = cmbPort.Text;
-                serialPort.Open();
-                isReceiving = false;
-                cmbPort.Enabled = false;
-                baudCombo.Enabled = false;
-                serialPort.ReadTimeout = 5;
-                button1.Text = "关闭串口";
-            }
-        }
-        string byteArrayToString(byte[] vs)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(DateTime.Now.TimeOfDay.ToString());
-            sb.Append(':');
-            foreach (byte b in vs)
-            {
-                sb.Append(b.ToString("X2"));
-                sb.Append(' ');
-            }
-            sb.AppendLine();
-            return sb.ToString();
-        }
-        StreamWriter sw;
-        void writeFile(string data)
-        {
-            sw.Write(data);
-        }
-        /**
-         *  数据接收
-         */
-        private void serialPort_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
+        #region 界面逻辑
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             try
             {
-                int len = serialPort.BytesToRead;
-                if (len <= 0)
+                if (tcpClient != null)
                 {
-                    return;
+                    tcpClient.Close();
                 }
-                byte[] vs = new byte[len];
-                serialPort.Read(vs, 0, len);
-
-                Task.Factory.StartNew(new Action(() =>
+                foreach (Client client in clientList)
                 {
-                    recData(vs);
-                }));
-
-
+                    client.Close();
+                }
+                if (tcpServer != null)
+                {
+                    tcpServer.Close();
+                }
+                clientList.Clear();
+                if (tcpSerThread != null)
+                {
+                    tcpSerThread.Abort();
+                }
             }
             catch (Exception exp)
             {
-
-            }
-
-            finally
-            {
-                isReceiving = false;/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+                MessageBox.Show(exp.Message);
             }
         }
-
-        private void 刷新端口ToolStripMenuItem_Click(object sender, EventArgs e)
+        public void update_rec_value(RecObj ls,int rowIndex)
         {
-            string selectStr = cmbPort.Text;
-            GetComList();
-            if (cmbPort.Items.Contains(selectStr) == false)
+            if (接收区十六进制ToolStripMenuItem.Checked)
             {
-                if (cmbPort.Items.Count > 0)
-                {
-                    cmbPort.SelectedIndex = 0;
-                }
-                else
-                {
-                    cmbPort.SelectedIndex = -1;
-                }
+                recList.Rows[rowIndex].Cells[1].Value = (object)(Convert.ToString(ls.recValue, 16));
             }
             else
             {
-                cmbPort.Text = selectStr;
+                recList.Rows[rowIndex].Cells[1].Value = (object)(Convert.ToString(ls.recValue, 10));
+            }
+
+
+            if (ls.recIsShow)
+            {
+
+                UILineSeries series = option.Series[ls.recName];
+                if (series != null)
+                {
+                    UIControl.AddSeriesPoint(LineChart, ls.recName,ls.recValue);
+                    //series.Points.AddY(ls[i].recValue);
+                }
+
+                //chartI.Add(i);
+                //Task t = Task.Factory.StartNew(()=>addPointToChart());
             }
         }
-        private void sendData(byte[] vs)
-        {
-            if (needScript)
-            {
-                try
-                {
-                    if (pyScript == null)
-                    {
-                        MessageBox.Show("脚本未加载");
-                    }
-                    else
-                    {
-                        vs = pyScript.dataSend(vs);
-                    }
-
-                }
-                catch (Exception exp)
-                {
-                    MessageBox.Show(exp.Message);
-                }
-
-            }
-            if (串口ToolStripMenuItem.Checked)
-            {
-                if (serialPort.IsOpen)
-                {
-                    serialPort.Write(vs, 0, vs.Length);
-                }
-            }
-            else if (tCP服务端ToolStripMenuItem.Checked)
-            {
-                foreach(Client cli in clientList)
-                {
-                    cli.SendMessage(vs);
-                }
-            }
-            else if (tCP客户端ToolStripMenuItem.Checked)
-            {
-                tcpClient.SendMessage(vs);
-            }
-            string bs = byteArrayToString(vs);
-            UIControl.AddTextBoxValue(recBox, "--->");
-            UIControl.AddTextBoxValue(recBox, bs);
-            if (needSave)
-            {
-                writeFile("--->" + bs);
-            }
-
-        }
-        #endregion
-
-        #region 界面逻辑
-
         private void LineChart_MouseEnter(object sender, EventArgs e)
         {
             MouseWheel += new MouseEventHandler(chart1_MouseEnter);//调用滚轮事件
@@ -869,14 +753,8 @@ namespace myPort
         {
             UIControl.ClearTextBoxValue(recBox);
         }
-        private void recBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
         #region 界面配置
-        dynamic pyScript;
-        string scriptPath;
-        bool needScript = false;
+        
 
         private void 加载脚本ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1065,29 +943,7 @@ namespace myPort
         #endregion
 
         #region 数据匹配
-        private FileInfo find_py(string name)
-        {
-            string rootPath = Directory.GetCurrentDirectory() + "\\function";
-            name = name + ".py";
-            DirectoryInfo root = new DirectoryInfo(rootPath);
-            foreach (FileInfo f in root.GetFiles())
-            {
-                if( name == f.Name)
-                {
-                    return f;
-                }
-            }
-            return null;
-        }
-        private void sendTempClear(List<SendObj> ls)
-        {
-            foreach (SendObj rec in ls)
-            {
-                rec.tempIndex = 0;
-                rec.tempValue = rec.sendValue;
-                rec.tempIndex = 0;
-            }
-        }
+        
         private void recData(byte[] vs)
         {
             if (needScript)
@@ -1118,409 +974,34 @@ namespace myPort
                 writeFile("<---" + bs);
             }
 
-            dataParsing(vs, parsingObjs, recObjs);
+            parse.dataParsing(vs, 高位在前ToolStripMenuItem.Checked);
         }
-        // 发送命令
-        public void sendCmd(CmdObj obj)
-        {
-            string[] hexArray = obj.cmdStr.Trim().Split(' ');
-            List<byte> vs = new List<byte>();
-            sendTempClear(sendObjs);
-            int chk = 0;
-            int chkindex = 0;
-            List<FuncObj> funcObjs = new List<FuncObj>();
-            // 填入数值
-            for (int i = 0; i < hexArray.Length; ++i)
-            {
-                byte num = 0;
-                if (hexArray[i].Contains('%'))
-                {
-                    string nameTemp = hexArray[i].Trim('%');
-                    foreach (SendObj send in sendObjs)
-                    {
-                        int numIndex = nameTemp.IndexOf(':');
-                        int byteNum = 1;
-                        string name;
-                        if (numIndex >= 0)
-                        {
-                            name = nameTemp.Substring(0, numIndex);
-                            byteNum = Convert.ToInt32(nameTemp.Substring(numIndex + 1));
-                        }
-                        else
-                        {
-                            name = nameTemp;
-                        }
-                        if (name.Equals(send.sendName))
-                        {
-                            for(int j = 0;j<byteNum;j++)
-                            {
-                                if (高位在前ToolStripMenuItem.Checked)
-                                {
-                                    send.tempIndex++;
-                                    num = (byte)((send.sendValue >> (byteNum - send.tempIndex) * 8) & 0xff);
-                                }
-                                else
-                                {
-                                    num = (byte)(send.tempValue & 0xff);
-                                    send.tempValue >>= 8;
-                                }
-                                vs.Add(num);
-                            }
-                        }
-                    }
-                }
-                else if(hexArray[i].Contains('$'))
-                {
-                    string nameTemp = hexArray[i].Trim('$');
-                    int numIndex = nameTemp.IndexOf(':');
-                    int byteNum = 1;
-                    string name;
-                    if (numIndex >= 0)
-                    {
-                        name = nameTemp.Substring(0, numIndex);
-                        byteNum = Convert.ToInt32(nameTemp.Substring(numIndex + 1));
-                    }
-                    else
-                    {
-                        name = nameTemp;
-                    }
-                    FuncObj func = new FuncObj();
-                    func.arrIndex = vs.Count;
-                    func.arrLen = byteNum;
-                    int paramIndex = name.IndexOf('(');
-                    if(paramIndex >= 0)
-                    {
-                        name = name.Substring(0,paramIndex);
-                    }
-                    func.name = name;
-                    func.str = nameTemp;
-                    funcObjs.Add(func);
-                    for(int j = 0;j< byteNum;j++)
-                    {
-                        vs.Add(0);
-                    }
-                }
-                else
-                {
-                    num = Convert.ToByte(hexArray[i], 16);
-                    vs.Add(num);
-                }
-            }
-
-            // 查找func脚本
-            foreach(FuncObj funcObj in funcObjs)
-            {
-                FileInfo f = find_py(funcObj.name);
-                try
-                {
-                    if (f != null)
-                    {
-                        ScriptEngine pyEngine = Python.CreateEngine();//创建Python解释器对象
-                        dynamic pyFunc = pyEngine.ExecuteFile(f.FullName);//读取脚本文件
-                        if (pyFunc != null)
-                        {
-                            int l = funcObj.str.IndexOf('(');
-                            int r = funcObj.str.IndexOf(')');
-                            string param = funcObj.str.Substring(l + 1, r - l - 1);
-                            string[] pList = param.Split(',');
-                            int value = pyFunc.main(vs.ToArray(), pList);
-                            for (int j = 0; j < funcObj.arrLen; j++)
-                            {
-                                byte num = 0;
-                                if (高位在前ToolStripMenuItem.Checked)
-                                {
-                                    num = (byte)((value >> (funcObj.arrLen - j - 1) * 8) & 0xff);
-                                }
-                                else
-                                {
-                                    num = (byte)(value & 0xff);
-                                    value >>= 8;
-                                }
-                                vs[funcObj.arrIndex + j] = num;
-                            }
-                        }
-
-                    }
-                }
-                catch(Exception e)
-                {
-                    MessageBox.Show("脚本运行错误"+e.Message);
-                }
-            }
-            
-            byte[] data = vs.ToArray();
-            sendData(data);
-        }
-        private SendObj findSendObjByName(List<SendObj> ls, string name)
-        {
-            foreach (SendObj send in ls)
-            {
-                if (send.sendName.Equals(name))
-                {
-                    return send;
-                }
-            }
-            return null;
-        }
-        private RecObj findRecObjByName(List<RecObj> ls, string name)
-        {
-            foreach (RecObj rec in ls)
-            {
-                if (rec.recName.Equals(name))
-                {
-                    return rec;
-                }
-            }
-            return null;
-        }
-        private CmdObj findCmdObjByName(List<CmdObj> ls, string name)
-        {
-            foreach (CmdObj rec in ls)
-            {
-                if (rec.cmdName.Equals(name))
-                {
-                    return rec;
-                }
-            }
-            return null;
-        }
-        private void recTempClear(List<RecObj> ls)
-        {
-            foreach (RecObj rec in ls)
-            {
-                rec.tempIndex = 0;
-                rec.tempValue = 0;
-                rec.valueChanged = false;
-            }
-        }
+       
         List<int> chartI = new List<int>();
         private void addPointToChart()
         {
             if (chartI.Count > 0)
             {
                 int i = chartI[0];
-                UILineSeries series = option.Series[recObjs[i].recName];
+                UILineSeries series = option.Series[parse.recObjs[i].recName];
                 if (series != null)
                 {
-                    UIControl.AddSeriesPoint(LineChart, recObjs[i].recName, recObjs[i].recValue);
+                    UIControl.AddSeriesPoint(LineChart, parse.recObjs[i].recName, parse.recObjs[i].recValue);
                     //series.Points.AddY(ls[i].recValue);
                 }
                 chartI.RemoveAt(0);
             }
         }
 
-        private void recTempApply(List<RecObj> ls)
-        {
-            for (int i = 0; i < ls.Count; ++i)
-            {
-
-                if (ls[i].valueChanged)
-                {
-                    ls[i].recValue = ls[i].tempValue;
-                    // 如果接收发送变量名称相同,则发送变量值变为接收变量的值
-                    SendObj send = findSendObjByName(sendObjs, ls[i].recName);
-                    if(send != null)
-                    {
-                        send.sendValue = ls[i].recValue;
-                    }
-                    if(接收区十六进制ToolStripMenuItem.Checked)
-                    {
-                        recList.Rows[i].Cells[1].Value = (object)(Convert.ToString(ls[i].recValue, 16));
-                    }
-                    else
-                    {
-                        recList.Rows[i].Cells[1].Value = (object)(Convert.ToString(ls[i].recValue, 10));
-                    }
-                    
-
-                    if (ls[i].recIsShow)
-                    {
-
-                        UILineSeries series = option.Series[recObjs[i].recName];
-                        if (series != null)
-                        {
-                            UIControl.AddSeriesPoint(LineChart, recObjs[i].recName, recObjs[i].recValue);
-                            //series.Points.AddY(ls[i].recValue);
-                        }
-
-                        //chartI.Add(i);
-                        //Task t = Task.Factory.StartNew(()=>addPointToChart());
-                    }
-                }
-            }
-        }
-
-        private void dataParsing(byte[] data, List<ParsingObj> ls, List<RecObj> recLs)
-        {
-            recTempClear(recLs);
-            foreach (ParsingObj obj in ls)
-            {
-                int i = 0;
-                int allLen = 0;
-                string hex = obj.parsingStr.Trim();
-                string[] hexArray = hex.Split(' ');
-                //if (hexArray.Length != data.Length)
-                //{
-                //    continue;
-                //}
-                byte value = 0;
-                RecObj rec = null;
-                List<FuncObj> funcObjs = new List<FuncObj>();
-                for (i = 0; i < hexArray.Length; ++i)
-                {
-                    string temp = hexArray[i];
-
-                    if (temp.Contains('%'))// 变量匹配
-                    {
-                        
-                        string nameTemp = temp.Trim('%');
-                        int numIndex = nameTemp.IndexOf(':');
-                        int num = 1;
-                        string name;
-                        if(numIndex >= 0)
-                        {
-                            name = nameTemp.Substring(0, numIndex);
-                            num = Convert.ToInt32(nameTemp.Substring(numIndex+1));
-                        }
-                        else
-                        {
-                            name = nameTemp;
-                        }
-
-                        rec = findRecObjByName(recLs, name);
-                        
-                        if (rec != null)
-                        {
-                            rec.valueChanged = true;
-                            for(int j = 0; j < num;j++)
-                            {
-                                if (高位在前ToolStripMenuItem.Checked)
-                                {
-                                    rec.tempValue = rec.tempValue << 8;
-                                    rec.tempValue += data[i + j];
-
-                                }
-                                else
-                                {
-                                    rec.tempValue += data[i + j] << (8 * rec.tempIndex);
-                                    rec.tempIndex++;
-                                }
-                            }
-                        }
-                        allLen += num;
-                    }
-                    else if (hexArray[i].Contains('$'))
-                    {
-                        string nameTemp = hexArray[i].Trim('$');
-                        int numIndex = nameTemp.IndexOf(':');
-                        int byteNum = 1;
-                        string name;
-                        if (numIndex >= 0)
-                        {
-                            name = nameTemp.Substring(0, numIndex);
-                            byteNum = Convert.ToInt32(nameTemp.Substring(numIndex + 1));
-                        }
-                        else
-                        {
-                            name = nameTemp;
-                        }
-                        int paramIndex = name.IndexOf('(');
-                        if (paramIndex >= 0)
-                        {
-                            name = name.Substring(0, paramIndex);
-                        }
-                        // 执行脚本
-                        FileInfo f = find_py(name);
-                        try
-                        {
-                            if (f != null)
-                            {
-                                ScriptEngine pyEngine = Python.CreateEngine();//创建Python解释器对象
-                                dynamic pyFunc = pyEngine.ExecuteFile(f.FullName);//读取脚本文件
-                                if (pyFunc != null)
-                                {
-                                    int l = nameTemp.IndexOf('(');
-                                    int r = nameTemp.IndexOf(')');
-                                    string param = nameTemp.Substring(l + 1, r - l - 1);
-                                    string[] pList = param.Split(',');
-                                    int pyValue = pyFunc.main(data, pList);
-                                    for (int j = 0; j < byteNum; j++)
-                                    {
-                                        byte num = 0;
-                                        if (高位在前ToolStripMenuItem.Checked)
-                                        {
-                                            num = (byte)((pyValue >> (byteNum - j - 1) * 8) & 0xff);
-                                        }
-                                        else
-                                        {
-                                            num = (byte)(pyValue & 0xff);
-                                            value >>= 8;
-                                        }
-                                        if(num != data[allLen + j])
-                                        {
-                                            goto unparse;
-                                        }
-                                    }
-                                    allLen += byteNum;
-                                }
-
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            MessageBox.Show("脚本运行错误" + e.Message);
-                        }
-                    }
-                    else // 数值匹配
-                    {
-                        value = Convert.ToByte(temp, 16);
-                        allLen++;
-                        if (value != data[i])
-                        {
-                            break;
-                        }
-                    }
-                }
-            unparse:
-                if (allLen == data.Length)// 匹配成功
-                {
-                    recTempApply(recLs);
-                    if (obj.parsingCmd)
-                    {
-                        CmdObj cmd = findCmdObjByName(cmdObjs, obj.parsingCmdName);
-                        if (cmd != null)
-                        {
-                            sendCmd(cmd);
-                            if (cmd.timerNeed)
-                            {
-                                if (cmd.timerIsStart == false)
-                                {
-                                    
-                                    cmd.cmdTimer.Start();
-                                }
-                            }
-                        }
-                    }
-                    break;
-                }
-                
-            }
-
-        }
         #endregion
+
         #region recList
-
-        // 是否显示曲线操作
-        private void recList_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-
-        }
 
         private void recList_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
         {
-            if (e.RowIndex < recObjs.Count)
+            if (e.RowIndex < parse.recObjs.Count)
             {
-                recObjs.RemoveAt(e.RowIndex);
+                parse.recObjs.RemoveAt(e.RowIndex);
             }
 
         }
@@ -1529,17 +1010,17 @@ namespace myPort
         {
             if (e.RowIndex != -1 && e.ColumnIndex != -1)
             {
-                if (e.RowIndex >= recObjs.Count)
+                if (e.RowIndex >= parse.recObjs.Count)
                 {
-                    recObjs.Add(new RecObj());
+                    parse.recObjs.Add(new RecObj());
                 }
 
                 if (e.ColumnIndex == 0)
                 {
-                    recObjs[e.RowIndex].recName = (string)recList.Rows[e.RowIndex].Cells[0].FormattedValue;
-                    if(String.IsNullOrEmpty(recObjs[e.RowIndex].recName))
+                    parse.recObjs[e.RowIndex].recName = (string)recList.Rows[e.RowIndex].Cells[0].FormattedValue;
+                    if(String.IsNullOrEmpty(parse.recObjs[e.RowIndex].recName))
                     {
-                        recObjs[e.RowIndex].recSeriseName = recObjs[e.RowIndex].recName;
+                        parse.recObjs[e.RowIndex].recSeriseName = parse.recObjs[e.RowIndex].recName;
                     }
                 }
 
@@ -1549,20 +1030,20 @@ namespace myPort
                     {
 
                         //选中改为不选中
-                        recObjs[e.RowIndex].recIsShow = false;
+                        parse.recObjs[e.RowIndex].recIsShow = false;
                         // 删除曲线
-                        if (option.Series.ContainsKey(recObjs[e.RowIndex].recName))
+                        if (option.Series.ContainsKey(parse.recObjs[e.RowIndex].recName))
                         {
-                            UILineSeries series = option.Series[recObjs[e.RowIndex].recSeriseName];
-                            option.Series.TryRemove(recObjs[e.RowIndex].recSeriseName, out series);
+                            UILineSeries series = option.Series[parse.recObjs[e.RowIndex].recSeriseName];
+                            option.Series.TryRemove(parse.recObjs[e.RowIndex].recSeriseName, out series);
                         }
                     }
                     else
                     {
                         //不选中改为选中
-                        recObjs[e.RowIndex].recIsShow = true;
+                        parse.recObjs[e.RowIndex].recIsShow = true;
                         // 添加曲线
-                        var series = option.AddSeries(new UILineSeries(recObjs[e.RowIndex].recSeriseName));
+                        var series = option.AddSeries(new UILineSeries(parse.recObjs[e.RowIndex].recSeriseName));
                         if(series != null)
                         {
                             series.Smooth = false;
@@ -1578,33 +1059,33 @@ namespace myPort
         {
             if (e.RowIndex != -1 && e.ColumnIndex != -1)
             {
-                if (e.RowIndex >= sendObjs.Count)
+                if (e.RowIndex >= parse.sendObjs.Count)
                 {
-                    sendObjs.Add(new SendObj());
+                    parse.sendObjs.Add(new SendObj());
                 }
 
                 if (e.ColumnIndex == 0)
                 {
-                    sendObjs[e.RowIndex].sendName = (string)sendList.Rows[e.RowIndex].Cells[0].FormattedValue;
+                    parse.sendObjs[e.RowIndex].sendName = (string)sendList.Rows[e.RowIndex].Cells[0].FormattedValue;
                 }
                 else if (e.ColumnIndex == 1)
                 {
                     if(设置区十六进制ToolStripMenuItem.Checked)
                     {
-                        sendObjs[e.RowIndex].sendValue = Int32.Parse((string)sendList.Rows[e.RowIndex].Cells[1].FormattedValue, System.Globalization.NumberStyles.HexNumber);
+                        parse.sendObjs[e.RowIndex].sendValue = Int32.Parse((string)sendList.Rows[e.RowIndex].Cells[1].FormattedValue, System.Globalization.NumberStyles.HexNumber);
                     }
                     else
                     {
-                        sendObjs[e.RowIndex].sendValue = Int32.Parse((string)sendList.Rows[e.RowIndex].Cells[1].FormattedValue, System.Globalization.NumberStyles.Integer);
+                        parse.sendObjs[e.RowIndex].sendValue = Int32.Parse((string)sendList.Rows[e.RowIndex].Cells[1].FormattedValue, System.Globalization.NumberStyles.Integer);
                     }
                 }
             }
         }
         private void sendList_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
         {
-            if (e.RowIndex < sendObjs.Count)
+            if (e.RowIndex < parse.sendObjs.Count)
             {
-                sendObjs.RemoveAt(e.RowIndex);
+                parse.sendObjs.RemoveAt(e.RowIndex);
             }
         }
         #endregion
@@ -1653,18 +1134,17 @@ namespace myPort
                 }
             }
         }
-        private void cmdList_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        private void cmdList_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex != -1 && e.ColumnIndex != -1)
             {
-                if (e.RowIndex >= cmdObjs.Count)
+                if (e.RowIndex >= parse.cmdObjs.Count)
                 {
-                    cmdObjs.Add(new CmdObj(this));
+                    parse.cmdObjs.Add(new CmdObj(this));
                     cmdList.AddRow();
                 }
                 CmdForm cf = new CmdForm(this, e.RowIndex);
                 cf.Show();
-                
             }
         }
         public Sunny.UI.UIDataGridView getCmdList()
@@ -1684,24 +1164,24 @@ namespace myPort
 
         private void cmdList_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
         {
-            if (e.RowIndex < cmdObjs.Count)
+            if (e.RowIndex < parse.cmdObjs.Count)
             {
-                cmdObjs.RemoveAt(e.RowIndex);
+                parse.cmdObjs.RemoveAt(e.RowIndex);
             }
         }
 
         private void cmdList_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             //点击button按钮事件
-            if (cmdList.Columns[e.ColumnIndex].Name == "cmdSend" && cmdObjs.Count > 0 && e.RowIndex >= 0)
+            if (cmdList.Columns[e.ColumnIndex].Name == "cmdSend" && parse.cmdObjs.Count > 0 && e.RowIndex >= 0)
             {
                 //说明点击的列是DataGridViewButtonColumn列
-                sendCmd(cmdObjs[e.RowIndex]);
-                if (cmdObjs[e.RowIndex].timerNeed)
+                parse.sendCmd(parse.cmdObjs[e.RowIndex],高位在前ToolStripMenuItem.Checked);
+                if (parse.cmdObjs[e.RowIndex].timerNeed)
                 {
-                    if (cmdObjs[e.RowIndex].timerIsStart == false)
+                    if (parse.cmdObjs[e.RowIndex].timerIsStart == false)
                     {
-                        cmdObjs[e.RowIndex].cmdTimer.Start();
+                        parse.cmdObjs[e.RowIndex].cmdTimer.Start();
                     }
                 }
             }
@@ -1710,7 +1190,7 @@ namespace myPort
         {
             private void TimerUp(object sender, EventArgs e)
             {
-                parent.sendCmd(this);
+                parent.parse.sendCmd(this,parent.高位在前ToolStripMenuItem.Checked);
             }
             public string cmdName { get; set; }
             public string cmdStr { get; set; }
@@ -1732,10 +1212,9 @@ namespace myPort
 
             }
         }
-
-
         #endregion
 
+        #region 端口选择
 
         #region TCP相关
         public List<Client> clientList = new List<Client>();
@@ -1790,7 +1269,9 @@ namespace myPort
                     uiButton3.Text = "侦听";
                 }
                 catch (Exception exp)
-                {}
+                {
+                    MessageBox.Show(exp.Message);
+                }
             }
         }
         //客户端
@@ -1852,7 +1333,7 @@ namespace myPort
                 }
                 catch(Exception exp)
                 {
-
+                    MessageBox.Show(exp.Message);
                 }
                 
             }
@@ -1889,7 +1370,7 @@ namespace myPort
                     }
                     catch(Exception exp)
                     {
-
+                        MessageBox.Show(exp.Message);
                     }
                 }
             }
@@ -1915,43 +1396,187 @@ namespace myPort
         {
             button2_Click(null, new EventArgs());
         }
-        
+
         #endregion
 
-        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        #region 串口操作
+        /// <summary>
+        /// 从注册表获取系统串口列表
+        /// </summary>
+        public void GetComList()
+        {
+            RegistryKey keyCom = Registry.LocalMachine.OpenSubKey("Hardware\\DeviceMap\\SerialComm");
+            if (keyCom != null)
+            {
+                string[] sSubKeys = keyCom.GetValueNames();
+                string[] str = new string[sSubKeys.Length];
+                for (int i = 0; i < sSubKeys.Length; i++)
+                {
+                    str[i] = (string)keyCom.GetValue(sSubKeys[i]);
+                }
+                cmbPort.Items.Clear();
+                for (int i = 0; i < str.Length; i++)
+                {
+                    cmbPort.Items.Add(str[i]);
+                }
+            }
+
+
+        }
+        bool isReceiving = false;/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (serialPort.IsOpen)
+            {
+
+                cmbPort.Enabled = true;
+                baudCombo.Enabled = true;
+                button1.Text = "打开串口";
+                serialPort.DiscardInBuffer();
+                serialPort.DiscardOutBuffer();
+
+                while (isReceiving) Application.DoEvents();
+                serialPort.Close();
+
+            }
+            else
+            {
+                serialPort.BaudRate = Convert.ToInt32(baudCombo.Text);
+                serialPort.PortName = cmbPort.Text;
+                serialPort.Open();
+                isReceiving = false;
+                cmbPort.Enabled = false;
+                baudCombo.Enabled = false;
+                serialPort.ReadTimeout = 5;
+                button1.Text = "关闭串口";
+            }
+        }
+        string byteArrayToString(byte[] vs)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(DateTime.Now.TimeOfDay.ToString());
+            sb.Append(':');
+            foreach (byte b in vs)
+            {
+                sb.Append(b.ToString("X2"));
+                sb.Append(' ');
+            }
+            sb.AppendLine();
+            return sb.ToString();
+        }
+        StreamWriter sw;
+        void writeFile(string data)
+        {
+            sw.Write(data);
+        }
+        /**
+         *  数据接收
+         */
+        private void serialPort_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
         {
             try
             {
-                if (tcpClient != null)
+                int len = serialPort.BytesToRead;
+                if (len <= 0)
                 {
-                    tcpClient.Close();
+                    return;
                 }
-                foreach (Client client in clientList)
+                byte[] vs = new byte[len];
+                serialPort.Read(vs, 0, len);
+
+                Task.Factory.StartNew(new Action(() =>
                 {
-                    client.Close();
-                }
-                if(tcpServer != null)
-                {
-                    tcpServer.Close();
-                }
-                clientList.Clear();
-                if(tcpSerThread != null)
-                {
-                    tcpSerThread.Abort();
-                }
-                
+                    recData(vs);
+                }));
+
+
             }
             catch (Exception exp)
             {
+                MessageBox.Show(exp.Message);
+            }
 
+            finally
+            {
+                isReceiving = false;/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
             }
         }
 
-        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        private void 刷新端口ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            string selectStr = cmbPort.Text;
+            GetComList();
+            if (cmbPort.Items.Contains(selectStr) == false)
+            {
+                if (cmbPort.Items.Count > 0)
+                {
+                    cmbPort.SelectedIndex = 0;
+                }
+                else
+                {
+                    cmbPort.SelectedIndex = -1;
+                }
+            }
+            else
+            {
+                cmbPort.Text = selectStr;
+            }
+        }
+        public void sendData(byte[] vs)
+        {
+            if (needScript)
+            {
+                try
+                {
+                    if (pyScript == null)
+                    {
+                        MessageBox.Show("脚本未加载");
+                    }
+                    else
+                    {
+                        vs = pyScript.dataSend(vs);
+                    }
+
+                }
+                catch (Exception exp)
+                {
+                    MessageBox.Show(exp.Message);
+                }
+
+            }
+            if (串口ToolStripMenuItem.Checked)
+            {
+                if (serialPort.IsOpen)
+                {
+                    serialPort.Write(vs, 0, vs.Length);
+                }
+            }
+            else if (tCP服务端ToolStripMenuItem.Checked)
+            {
+                foreach (Client cli in clientList)
+                {
+                    cli.SendMessage(vs);
+                }
+            }
+            else if (tCP客户端ToolStripMenuItem.Checked)
+            {
+                tcpClient.SendMessage(vs);
+            }
+            string bs = byteArrayToString(vs);
+            UIControl.AddTextBoxValue(recBox, "--->");
+            UIControl.AddTextBoxValue(recBox, bs);
+            if (needSave)
+            {
+                writeFile("--->" + bs);
+            }
 
         }
 
 
+        #endregion
+
+        #endregion
+
+        
     }
 }

@@ -24,7 +24,7 @@ namespace myPort
         {
             InitializeComponent();
             this.index = index;
-            this.obj = form.cmdObjs[index];
+            this.obj = form.parse.cmdObjs[index];
             this.form = form;
             cmdName.Text = obj.cmdName;
             cmdStr.Text = obj.cmdStr;
@@ -40,23 +40,30 @@ namespace myPort
         private void uiButton1_Click(object sender, EventArgs e)
         {
             Sunny.UI.UIDataGridView cmdList = form.getCmdList();
-            form.cmdObjs[index].cmdName = cmdName.Text;
-            form.cmdObjs[index].cmdStr = cmdStr.Text;
-            form.cmdObjs[index].timerNeed = timerNeed.Checked;
-            form.cmdObjs[index].time =  Convert.ToInt32(timerTime.Text);
-            form.parseCmd(form.cmdObjs[index]);
-            form.cmdObjs[index].cmdTimer.Interval = form.cmdObjs[index].time;
+            if (string.IsNullOrWhiteSpace(cmdName.Text) || string.IsNullOrWhiteSpace(cmdStr.Text))
+            {
+                form.parse.cmdObjs.RemoveAt(index);
+                cmdList.Rows.RemoveAt(index);
+                this.Close();
+                return;
+            }
+            
+            form.parse.cmdObjs[index].cmdName = cmdName.Text;
+            form.parse.cmdObjs[index].cmdStr = cmdStr.Text;
+            form.parse.cmdObjs[index].timerNeed = timerNeed.Checked;
+            form.parse.cmdObjs[index].time =  Convert.ToInt32(timerTime.Text);
+            form.parseCmd(form.parse.cmdObjs[index]);
+            form.parse.cmdObjs[index].cmdTimer.Interval = form.parse.cmdObjs[index].time;
             if (!timerNeed.Checked)
             {
-                form.cmdObjs[index].cmdTimer.Stop();
+                form.parse.cmdObjs[index].cmdTimer.Stop();
             }
-            cmdList.Rows[index].Cells[0].Value = form.cmdObjs[index].cmdName;
-            cmdList.Rows[index].Cells[1].Value = form.cmdObjs[index].cmdStr;
-            cmdList.Rows[index].Cells[3].Value = form.cmdObjs[index].timerNeed;
-            cmdList.Rows[index].Cells[4].Value = form.cmdObjs[index].time;
+            cmdList.Rows[index].Cells[0].Value = form.parse.cmdObjs[index].cmdName;
+            cmdList.Rows[index].Cells[1].Value = form.parse.cmdObjs[index].cmdStr;
+            cmdList.Rows[index].Cells[3].Value = form.parse.cmdObjs[index].timerNeed;
+            cmdList.Rows[index].Cells[4].Value = form.parse.cmdObjs[index].time;
             cmdList.EndEdit();
             this.Close();
-
         }
     }
 }

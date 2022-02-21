@@ -41,6 +41,14 @@ namespace myPort
         private void uiButton1_Click(object sender, EventArgs e)
         {
             Sunny.UI.UIDataGridView ls = form.getParsingList();
+            if (string.IsNullOrWhiteSpace(proName.Text) || string.IsNullOrWhiteSpace(proStr.Text))
+            {
+                form.ls.RemoveAt(index);
+                ls.Rows.RemoveAt(index);
+                this.Close();
+                return;
+            }
+            
             form.ls[index].parsingName = proName.Text;
             form.ls[index].parsingStr = proStr.Text;
             form.ls[index].parsingCmd = reply.Checked;

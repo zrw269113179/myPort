@@ -86,6 +86,7 @@ namespace myPort
             dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.parsingList.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.parsingList.RowHeadersVisible = false;
+            this.parsingList.RowHeadersWidth = 51;
             dataGridViewCellStyle5.BackColor = System.Drawing.Color.White;
             this.parsingList.RowsDefaultCellStyle = dataGridViewCellStyle5;
             this.parsingList.RowTemplate.Height = 23;
@@ -95,32 +96,44 @@ namespace myPort
             this.parsingList.Size = new System.Drawing.Size(800, 415);
             this.parsingList.Style = Sunny.UI.UIStyle.Custom;
             this.parsingList.TabIndex = 0;
-            this.parsingList.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.parsingList_CellBeginEdit);
+            this.parsingList.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.parsingList_CellDoubleClick);
             this.parsingList.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.parsingList_RowsRemoved);
             // 
             // parsingName
             // 
             this.parsingName.HeaderText = "协议名";
+            this.parsingName.MinimumWidth = 6;
             this.parsingName.Name = "parsingName";
+            this.parsingName.ReadOnly = true;
+            this.parsingName.Width = 125;
             // 
             // parsingValue
             // 
             this.parsingValue.HeaderText = "协议内容";
+            this.parsingValue.MinimumWidth = 6;
             this.parsingValue.Name = "parsingValue";
+            this.parsingValue.ReadOnly = true;
+            this.parsingValue.Width = 125;
             // 
             // parsingSend
             // 
             this.parsingSend.HeaderText = "是否回复";
+            this.parsingSend.MinimumWidth = 6;
             this.parsingSend.Name = "parsingSend";
+            this.parsingSend.ReadOnly = true;
+            this.parsingSend.Width = 125;
             // 
             // parsingCmd
             // 
             this.parsingCmd.HeaderText = "回复命令";
+            this.parsingCmd.MinimumWidth = 6;
             this.parsingCmd.Name = "parsingCmd";
+            this.parsingCmd.ReadOnly = true;
+            this.parsingCmd.Width = 125;
             // 
             // Protocols
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 21F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 27F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.parsingList);

@@ -22,7 +22,7 @@ namespace myPort
         public Protocols(Form1 form)
         {
             InitializeComponent();
-            this.ls = form.parsingObjs;
+            this.ls = form.parse.parsingObjs;
             parent = form;
             parsingList.Columns[0].DataPropertyName = "parsingName";
             parsingList.Columns[1].DataPropertyName = "parsingStr";
@@ -43,7 +43,7 @@ namespace myPort
 
         private void Protocols_FormClosing(object sender, FormClosingEventArgs e)
         {
-            parent.parsingObjs = ls;
+            parent.parse.parsingObjs = ls;
         }
 
 
@@ -60,7 +60,7 @@ namespace myPort
             }
         }
 
-        private void parsingList_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        private void parsingList_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex != -1 && e.ColumnIndex != -1)
             {
