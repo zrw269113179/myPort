@@ -39,10 +39,10 @@ namespace myPort
             if (string.IsNullOrWhiteSpace(proName.Text) || string.IsNullOrWhiteSpace(proStr.Text))
             {
                 form.ls.RemoveAt(index);
-                ls.Rows.RemoveAt(index);
-                this.Close();
-                return;
+                ls.Rows.RemoveAt(index);  
             }
+            this.Close();
+            return;
         }
 
         private void uiButton1_Click(object sender, EventArgs e)

@@ -149,11 +149,11 @@ namespace myPort
                     else if(obj.array[i].num != -1) // 数值匹配
                     {
                         value = obj.array[i].num;
-                        allLen++;
-                        if (value != data[i])
+                        if (value != data[allLen])
                         {
                             break;
                         }
+                        allLen++;
                     }
                     else
                     {
@@ -221,7 +221,8 @@ namespace myPort
         {
             obj.array = new List<PerParse>();
             int i = 0;
-            string hex = obj.parsingStr.Trim();
+            string hex = obj.parsingStr.Replace('：',':').Trim();
+            hex = new System.Text.RegularExpressions.Regex("[\\s]+").Replace(hex, " ");
             string[] hexArray = hex.Split(' ');
             byte value = 0;
             RecObj reco = null;
@@ -442,7 +443,9 @@ namespace myPort
         {
             obj.array = new List<CmdPerParse>();
             int i = 0;
-            string[] hexArray = obj.cmdStr.Trim().Split(' ');
+            string hex = obj.cmdStr.Replace('：', ':').Trim();
+            hex = new System.Text.RegularExpressions.Regex("[\\s]+").Replace(hex, " ");
+            string[] hexArray = hex.Split(' ');
             byte value = 0;
             SendObj sendo = null;
             for (i = 0; i < hexArray.Length; ++i)
