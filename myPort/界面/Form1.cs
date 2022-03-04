@@ -626,6 +626,10 @@ namespace myPort
         {
             LineChart.ZoomBack();
         }
+        private void 正常大小ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LineChart.ZoomNormal();
+        }
         #endregion
 
         private void 开始保存ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1545,5 +1549,6 @@ namespace myPort
 
         #endregion
 
+        
     }
 }

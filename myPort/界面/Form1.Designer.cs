@@ -129,6 +129,7 @@ namespace myPort
             this.serialPort = new System.IO.Ports.SerialPort(this.components);
             this.sendObjBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.recObjBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.正常大小ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -745,28 +746,29 @@ namespace myPort
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.移至开始ToolStripMenuItem,
             this.移至最新ToolStripMenuItem,
-            this.缩小ToolStripMenuItem});
+            this.缩小ToolStripMenuItem,
+            this.正常大小ToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(139, 76);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(211, 128);
             // 
             // 移至开始ToolStripMenuItem
             // 
             this.移至开始ToolStripMenuItem.Name = "移至开始ToolStripMenuItem";
-            this.移至开始ToolStripMenuItem.Size = new System.Drawing.Size(138, 24);
+            this.移至开始ToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
             this.移至开始ToolStripMenuItem.Text = "移至开始";
             this.移至开始ToolStripMenuItem.Click += new System.EventHandler(this.移至开始ToolStripMenuItem_Click);
             // 
             // 移至最新ToolStripMenuItem
             // 
             this.移至最新ToolStripMenuItem.Name = "移至最新ToolStripMenuItem";
-            this.移至最新ToolStripMenuItem.Size = new System.Drawing.Size(138, 24);
+            this.移至最新ToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
             this.移至最新ToolStripMenuItem.Text = "移至最新";
             this.移至最新ToolStripMenuItem.Click += new System.EventHandler(this.移至最新ToolStripMenuItem_Click);
             // 
             // 缩小ToolStripMenuItem
             // 
             this.缩小ToolStripMenuItem.Name = "缩小ToolStripMenuItem";
-            this.缩小ToolStripMenuItem.Size = new System.Drawing.Size(138, 24);
+            this.缩小ToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
             this.缩小ToolStripMenuItem.Text = "缩小";
             this.缩小ToolStripMenuItem.Click += new System.EventHandler(this.缩小ToolStripMenuItem_Click);
             // 
@@ -1236,6 +1238,13 @@ namespace myPort
             // 
             this.recObjBindingSource.DataSource = typeof(myPort.RecObj);
             // 
+            // 正常大小ToolStripMenuItem
+            // 
+            this.正常大小ToolStripMenuItem.Name = "正常大小ToolStripMenuItem";
+            this.正常大小ToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.正常大小ToolStripMenuItem.Text = "正常大小";
+            this.正常大小ToolStripMenuItem.Click += new System.EventHandler(this.正常大小ToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 27F);
@@ -1372,6 +1381,7 @@ namespace myPort
         private System.Windows.Forms.ToolStripMenuItem 移至开始ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 移至最新ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 缩小ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 正常大小ToolStripMenuItem;
     }
 }
 
