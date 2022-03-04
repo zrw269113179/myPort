@@ -34,7 +34,14 @@ namespace myPort
 
         private void uiButton2_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Sunny.UI.UIDataGridView cmdList = form.getCmdList();
+            if (string.IsNullOrWhiteSpace(cmdName.Text) || string.IsNullOrWhiteSpace(cmdStr.Text))
+            {
+                form.parse.cmdObjs.RemoveAt(index);
+                cmdList.Rows.RemoveAt(index);
+                this.Close();
+                return;
+            }
         }
 
         private void uiButton1_Click(object sender, EventArgs e)
@@ -52,7 +59,6 @@ namespace myPort
             form.parse.cmdObjs[index].cmdStr = cmdStr.Text;
             form.parse.cmdObjs[index].timerNeed = timerNeed.Checked;
             form.parse.cmdObjs[index].time =  Convert.ToInt32(timerTime.Text);
-            form.parseCmd(form.parse.cmdObjs[index]);
             form.parse.cmdObjs[index].cmdTimer.Interval = form.parse.cmdObjs[index].time;
             if (!timerNeed.Checked)
             {
@@ -62,8 +68,12 @@ namespace myPort
             cmdList.Rows[index].Cells[1].Value = form.parse.cmdObjs[index].cmdStr;
             cmdList.Rows[index].Cells[3].Value = form.parse.cmdObjs[index].timerNeed;
             cmdList.Rows[index].Cells[4].Value = form.parse.cmdObjs[index].time;
-            cmdList.EndEdit();
-            this.Close();
+            if (form.parse.cmd_send_per_prase(obj))
+            {
+                cmdList.EndEdit();
+                this.Close();
+            }
+            
         }
     }
 }

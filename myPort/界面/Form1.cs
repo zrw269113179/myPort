@@ -25,39 +25,20 @@ namespace myPort
 
 
         public Parse parse;
-        public bool isRecHex = true;
-        public bool isSendHex = true;
-        UILineOption option = new UILineOption();
-        dynamic pyScript;
-        string scriptPath;
-        bool needScript = false;
+        public bool isRecHex = true; // 十六进制接收
+        public bool isSendHex = true; // 十六进制发送
+
+        dynamic pyScript; // py脚本
+        string scriptPath; // py脚本路径
+        bool needScript = false; // 需要调用py脚本
+
+        private bool needSave = false; // 是否需要保存数据
         public Form1()
         {
             InitializeComponent();
-            串口ToolStripMenuItem_Click(null,new EventArgs());
+
+            串口ToolStripMenuItem_Click(null, new EventArgs());
             GetComList();
-
-
-            option.ToolTip.Visible = true;
-            option.Title = null;
-
-            option.XAxis.AxisLabel.DecimalCount = 1;
-            option.XAxis.AxisLabel.AutoFormat = false;
-            option.YAxis.AxisLabel.DecimalCount = 1;
-            option.YAxis.AxisLabel.AutoFormat = false;
-            option.Grid.Bottom = 30;
-            option.Grid.Top = 30;
-            option.Grid.Left = 30;
-            option.Grid.Right = 30;
-            option.XAxis.Min = 0;
-            option.XAxis.Max = 220;
-            option.XAxis.MaxAuto = false;
-            option.XAxis.MinAuto = false;
-            //option.ToolTip.Visible = true;
-            //option.YAxis.Scale = true;
-            //option.XAxis.Scale = true;
-            LineChart.SetOption(option);
-
 
             if (cmbPort.Items.Count > 0)
             {
@@ -65,11 +46,10 @@ namespace myPort
             }
             baudCombo.SelectedIndex = 3;
 
+            chart_init();
 
             sendList.Columns[0].Width = (int)(0.5 * sendList.Width);
             sendList.Columns[1].Width = (int)(0.49 * sendList.Width);
-            //sendList.Columns[0].DataPropertyName = "sendName";
-            //sendList.Columns[1].DataPropertyName = "sendValue";
 
             recList.Columns[0].DataPropertyName = "recName";
             recList.Columns[1].DataPropertyName = "recValue";
@@ -84,7 +64,7 @@ namespace myPort
             parse = new Parse(this);
 
         }
-        
+
         #region 参数操作
         private void 导出ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -103,7 +83,6 @@ namespace myPort
                 string fileNameExt = localFilePath.Substring(localFilePath.LastIndexOf("\\") + 1); //获取文件名,不带路径
                 saveParam(localFilePath);
             }
-
 
         }
 
@@ -161,7 +140,7 @@ namespace myPort
                 scriptPath = script.GetAttribute("path");
                 if (scriptPath != null)
                 {
-                    if(!string.IsNullOrEmpty(scriptPath))
+                    if (!string.IsNullOrEmpty(scriptPath))
                     {
                         try
                         {
@@ -173,8 +152,8 @@ namespace myPort
                             MessageBox.Show(exp.Message);
                         }
                     }
-                    
-                    
+
+
                 }
             }
 
@@ -228,7 +207,7 @@ namespace myPort
 
                 if (UI.GetAttribute("recUI") == "False")
                 {
-                    接收参数ToolStripMenuItem.Checked = false; 
+                    接收参数ToolStripMenuItem.Checked = false;
                 }
                 else
                 {
@@ -276,9 +255,9 @@ namespace myPort
             {
                 XmlElement portChoose = (XmlElement)portChooseNode;//为了可以使用属性存储信息,我们把XmlNode转化为XmlElement.
                 int i = Convert.ToInt32(portChoose.GetAttribute("choose"));
-                if(i == 1)
+                if (i == 1)
                 {
-                    串口ToolStripMenuItem_Click(null,new EventArgs());
+                    串口ToolStripMenuItem_Click(null, new EventArgs());
                 }
                 else if (i == 2)
                 {
@@ -289,7 +268,7 @@ namespace myPort
                     tCP客户端ToolStripMenuItem_Click(null, new EventArgs());
                 }
             }
-            
+
             XmlNode node = root.SelectSingleNode("recList");//取仅有的一个元素
             if (node != null)
             {
@@ -305,7 +284,7 @@ namespace myPort
                     rec.recIsShow = xml.GetAttribute("recIsShow") == "True" ? true : false;
                     if (rec.recIsShow)
                     {
-                        option.AddSeries(rec.recSeriseName);
+                        chart_add_series(rec.recSeriseName);
                     }
                     parse.recObjs.Add(rec);
                     recList.Rows.Add(rec.recName, 0, rec.recIsShow);
@@ -317,7 +296,7 @@ namespace myPort
             {
                 XmlElement parsingelement = (XmlElement)parsingNode;//为了可以使用属性存储信息,我们把XmlNode转化为XmlElement.
                 XmlNodeList parsings = parsingelement.ChildNodes;
-                parse.parsingObjs.Clear();
+                parse.parse_rec_clear();
                 foreach (XmlElement xml in parsings)
                 {
                     ParsingObj parsing = new ParsingObj();
@@ -326,7 +305,8 @@ namespace myPort
                     parsing.parsingCmdName = xml.GetAttribute("parsingCmdName");
                     parsing.parsingName = xml.GetAttribute("parsingName");
                     parsing.parsingCmd = xml.GetAttribute("parsingCmd") == "True" ? true : false;
-                    parse.parsingObjs.Add(parsing);
+                    
+                    parse.parse_rec_add(parsing);
                 }
             }
 
@@ -345,7 +325,7 @@ namespace myPort
                     parse.sendObjs.Add(send);
                     if (设置区十六进制ToolStripMenuItem.Checked)
                     {
-                        sendList.Rows.Add(send.sendName, Convert.ToString(send.sendValue,16));
+                        sendList.Rows.Add(send.sendName, Convert.ToString(send.sendValue, 16));
                     }
                     else
                     {
@@ -359,7 +339,7 @@ namespace myPort
             {
                 XmlElement cmdelement = (XmlElement)cmdNode;//为了可以使用属性存储信息,我们把XmlNode转化为XmlElement.
                 XmlNodeList cmds = cmdelement.ChildNodes;
-                parse.cmdObjs.Clear();
+                parse.cmd_send_clear();
                 cmdList.Rows.Clear();
                 foreach (XmlElement xml in cmds)
                 {
@@ -378,22 +358,15 @@ namespace myPort
                         cmd.time = Convert.ToInt32(temp);
                         cmd.cmdTimer.Interval = cmd.time;
                     }
-                        
+
 
                     temp = xml.GetAttribute("timerNeed");
                     if (!String.IsNullOrEmpty(temp))
                         cmd.timerNeed = temp == "True" ? true : false;
 
-                    parseCmd(cmd);
-                    parse.cmdObjs.Add(cmd);
-                    cmdList.Rows.Add(cmd.cmdName, cmd.cmdStr,null,cmd.timerNeed,cmd.time);
-                    
-
+                    parse.cmd_send_add(cmd);
+                    cmdList.Rows.Add(cmd.cmdName, cmd.cmdStr, null, cmd.timerNeed, cmd.time);
                 }
-            }
-            foreach(UILineSeries ser in option.Series.Values)
-            {
-                ser.Smooth = false;
             }
             xmlReader.Close();
         }
@@ -436,7 +409,7 @@ namespace myPort
             service.SetAttribute("port", serPort.Text);
             root.AppendChild(service);
             XmlElement portChoose = document.CreateElement("portChoose");
-            if(串口ToolStripMenuItem.Checked)
+            if (串口ToolStripMenuItem.Checked)
             {
                 portChoose.SetAttribute("choose", "1");
             }
@@ -444,9 +417,9 @@ namespace myPort
             {
                 portChoose.SetAttribute("choose", "2");
             }
-            else if(tCP客户端ToolStripMenuItem.Checked)
+            else if (tCP客户端ToolStripMenuItem.Checked)
             {
-                portChoose.SetAttribute("choose","3");
+                portChoose.SetAttribute("choose", "3");
             }
             root.AppendChild(portChoose);
 
@@ -505,6 +478,8 @@ namespace myPort
         #endregion
 
         #region 界面逻辑
+
+       
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             try
@@ -532,7 +507,8 @@ namespace myPort
                 MessageBox.Show(exp.Message);
             }
         }
-        public void update_rec_value(RecObj ls,int rowIndex)
+        /// 接收到数据
+        public void update_rec_value(RecObj ls, int rowIndex)
         {
             if (接收区十六进制ToolStripMenuItem.Checked)
             {
@@ -543,25 +519,76 @@ namespace myPort
                 recList.Rows[rowIndex].Cells[1].Value = (object)(Convert.ToString(ls.recValue, 10));
             }
 
-
             if (ls.recIsShow)
             {
-
-                UILineSeries series = option.Series[ls.recName];
-                if (series != null)
-                {
-                    UIControl.AddSeriesPoint(LineChart, ls.recName,ls.recValue);
-                    //series.Points.AddY(ls[i].recValue);
-                }
-
-                //chartI.Add(i);
-                //Task t = Task.Factory.StartNew(()=>addPointToChart());
+                chart_add_point(ls.recName, ls.recValue);
             }
         }
         private void LineChart_MouseEnter(object sender, EventArgs e)
         {
             MouseWheel += new MouseEventHandler(chart1_MouseEnter);//调用滚轮事件
         }
+        #region  曲线操作
+        UILineOption option = new UILineOption(); // 画图函数
+        private void chart_init()
+        {
+            option.ToolTip.Visible = true;
+            option.Title = null;
+            option.XAxis.AxisLabel.DecimalCount = 1;
+            option.XAxis.AxisLabel.AutoFormat = false;
+            option.YAxis.AxisLabel.DecimalCount = 1;
+            option.YAxis.AxisLabel.AutoFormat = false;
+            option.Grid.Bottom = 30;
+            option.Grid.Top = 30;
+            option.Grid.Left = 30;
+            option.Grid.Right = 30;
+            option.XAxis.Min = 0;
+            option.XAxis.Max = 220;
+            option.XAxis.MaxAuto = false;
+            option.XAxis.MinAuto = false;
+            LineChart.SetOption(option);
+        }
+        private void chart_add_series(string name)
+        {
+            UILineSeries ser = new UILineSeries(name);
+            ser.Smooth = true;
+            option.AddSeries(ser);
+        }
+        private void chart_del_series(string str)
+        {
+            if (option.Series.ContainsKey(str))
+            {
+                UILineSeries series = option.Series[str];
+                option.Series.TryRemove(str, out series);
+            }
+        }
+        private void chart_add_point(string str, int value)
+        {
+            if (!option.Series.ContainsKey(str))
+            {
+                chart_add_series(str);
+            }
+            UILineSeries series = option.Series[str];
+            if (series != null)
+            {
+                UIControl.AddSeriesPoint(LineChart, str, value);
+            }
+        }
+
+        private void chart_clear()
+        {
+            foreach (UILineSeries series in option.Series.Values)
+            {
+                series.Clear();
+            }
+            UIControl.SeriesClear();
+            option.XAxis.Data.Clear();
+            option.YAxis.Data.Clear();
+            option.XAxis.Min = 0;
+            option.XAxis.Max = 220;
+            LineChart.Refresh();
+        }
+        
         private void chart1_MouseEnter(object sender, MouseEventArgs e)
         {
             if (e.Delta > 0)//鼠标向上
@@ -571,12 +598,7 @@ namespace myPort
                     UIControl.show += 1;
                     LineChart.Option.XAxis.Max += 1;
                     LineChart.Option.XAxis.Min += 1;
-                    //LineChart.Option.XAxis.Max = UIControl.show + 20;
-                    //LineChart.Option.XAxis.MaxAuto = false;
-                    //LineChart.Option.XAxis.Min = UIControl.show - 200;
                 }
-
-
             }
             else//鼠标向下滚动
             {
@@ -585,18 +607,30 @@ namespace myPort
                     UIControl.show -= 1;
                     LineChart.Option.XAxis.Max -= 1;
                     LineChart.Option.XAxis.Min -= 1;
-                    //LineChart.Option.XAxis.Max = UIControl.show + 20;
-                    //LineChart.Option.XAxis.MaxAuto = false;
-                    //LineChart.Option.XAxis.Min = UIControl.show - 200;
                 }
             }
             LineChart.Refresh();
         }
 
-        private bool needSave = false;
+        private void 移至开始ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            UIControl.show = 0;
+            option.XAxis.Min = 0;
+            option.XAxis.Max = 220;
+        }
+        private void 移至最新ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            UIControl.show = UIControl.index;
+        }
+        private void 缩小ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LineChart.ZoomBack();
+        }
+        #endregion
+
         private void 开始保存ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (开始保存ToolStripMenuItem.Text.Equals("开始保存"))
+            if (!needSave)
             {
                 SaveFileDialog sfd = new SaveFileDialog();
                 sfd.Filter = "txt(*.txt)|*.txt";
@@ -628,7 +662,7 @@ namespace myPort
         /// <param name="fileName">CSV的文件路径</param>
         public void SaveDataTableCSV(string path, DataTable dt)
         {
-            FileStream fs = new FileStream(path,  FileMode.OpenOrCreate, FileAccess.Write);
+            FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write);
             StreamWriter sw = new StreamWriter(fs, Encoding.Default);
             StringBuilder sb = new StringBuilder();
             fs.SetLength(0);
@@ -697,18 +731,15 @@ namespace myPort
                         dt.Rows[(int)LineChart.Option.Series[key].XData[i] - 1][key] = x;
                     }
                 }
-                
+
                 SaveDataTableCSV(sfd.FileName.ToString(), dt);
             }
-
-
         }
         private void 高位在前ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             高位在前ToolStripMenuItem.Checked = true;
             低位在前ToolStripMenuItem.Checked = false;
         }
-
         private void 低位在前ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             高位在前ToolStripMenuItem.Checked = false;
@@ -718,7 +749,7 @@ namespace myPort
         private void button2_Click(object sender, EventArgs e)
         {
             string hex = sendBox.Text.Trim(' ');
-            if(string.IsNullOrEmpty(hex))
+            if (string.IsNullOrEmpty(hex))
             {
                 return;
             }
@@ -728,7 +759,7 @@ namespace myPort
             {
                 foreach (string a in hexarray)
                 {
-                    
+
                     bs.Add(Convert.ToByte(a, 16));
                 }
                 sendData(bs.ToArray());
@@ -737,7 +768,6 @@ namespace myPort
             {
                 MessageBox.Show(exp.Message);
             }
-            
         }
 
         // 清空接收
@@ -754,7 +784,7 @@ namespace myPort
             UIControl.ClearTextBoxValue(recBox);
         }
         #region 界面配置
-        
+
 
         private void 加载脚本ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -867,26 +897,24 @@ namespace myPort
             }
 
         }
+        private void recList_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            parse.parse_rec_upgrade();
+        }
+
+        private void sendList_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            parse.cmd_send_upgrade();
+        }
         private void uiButton9_Click(object sender, EventArgs e)
         {
-            foreach (UILineSeries series in option.Series.Values)
-            {
-                series.Clear();
-            }
-            UIControl.SeriesClear();
-            option.XAxis.Data.Clear();
-            option.YAxis.Data.Clear();
-            option.XAxis.Min = 0;
-            option.XAxis.Max = 220;
-            LineChart.Refresh();
+            chart_clear();
         }
 
         private void 设置区十六进制ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             设置区十六进制ToolStripMenuItem.Checked = !设置区十六进制ToolStripMenuItem.Checked;
-
         }
-
         private void 接收区十六进制ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             接收区十六进制ToolStripMenuItem.Checked = !接收区十六进制ToolStripMenuItem.Checked;
@@ -943,7 +971,7 @@ namespace myPort
         #endregion
 
         #region 数据匹配
-        
+
         private void recData(byte[] vs)
         {
             if (needScript)
@@ -976,22 +1004,6 @@ namespace myPort
 
             parse.dataParsing(vs, 高位在前ToolStripMenuItem.Checked);
         }
-       
-        List<int> chartI = new List<int>();
-        private void addPointToChart()
-        {
-            if (chartI.Count > 0)
-            {
-                int i = chartI[0];
-                UILineSeries series = option.Series[parse.recObjs[i].recName];
-                if (series != null)
-                {
-                    UIControl.AddSeriesPoint(LineChart, parse.recObjs[i].recName, parse.recObjs[i].recValue);
-                    //series.Points.AddY(ls[i].recValue);
-                }
-                chartI.RemoveAt(0);
-            }
-        }
 
         #endregion
 
@@ -1003,7 +1015,6 @@ namespace myPort
             {
                 parse.recObjs.RemoveAt(e.RowIndex);
             }
-
         }
 
         private void recList_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -1018,7 +1029,7 @@ namespace myPort
                 if (e.ColumnIndex == 0)
                 {
                     parse.recObjs[e.RowIndex].recName = (string)recList.Rows[e.RowIndex].Cells[0].FormattedValue;
-                    if(String.IsNullOrEmpty(parse.recObjs[e.RowIndex].recName))
+                    if (String.IsNullOrEmpty(parse.recObjs[e.RowIndex].recName))
                     {
                         parse.recObjs[e.RowIndex].recSeriseName = parse.recObjs[e.RowIndex].recName;
                     }
@@ -1032,22 +1043,15 @@ namespace myPort
                         //选中改为不选中
                         parse.recObjs[e.RowIndex].recIsShow = false;
                         // 删除曲线
-                        if (option.Series.ContainsKey(parse.recObjs[e.RowIndex].recName))
-                        {
-                            UILineSeries series = option.Series[parse.recObjs[e.RowIndex].recSeriseName];
-                            option.Series.TryRemove(parse.recObjs[e.RowIndex].recSeriseName, out series);
-                        }
+                        chart_del_series(parse.recObjs[e.RowIndex].recSeriseName);
                     }
                     else
                     {
+                        // 添加曲线
+                        chart_add_series(parse.recObjs[e.RowIndex].recSeriseName);
                         //不选中改为选中
                         parse.recObjs[e.RowIndex].recIsShow = true;
-                        // 添加曲线
-                        var series = option.AddSeries(new UILineSeries(parse.recObjs[e.RowIndex].recSeriseName));
-                        if(series != null)
-                        {
-                            series.Smooth = false;
-                        }
+                        
                     }
                 }
             }
@@ -1070,7 +1074,7 @@ namespace myPort
                 }
                 else if (e.ColumnIndex == 1)
                 {
-                    if(设置区十六进制ToolStripMenuItem.Checked)
+                    if (设置区十六进制ToolStripMenuItem.Checked)
                     {
                         parse.sendObjs[e.RowIndex].sendValue = Int32.Parse((string)sendList.Rows[e.RowIndex].Cells[1].FormattedValue, System.Globalization.NumberStyles.HexNumber);
                     }
@@ -1091,49 +1095,7 @@ namespace myPort
         #endregion
 
         #region cmdList
-        public void parseCmd(CmdObj cmd)
-        {
-            // 解析出list
-            if(string.IsNullOrEmpty(cmd.cmdStr))
-            {
-                return;
-            }    
-            string[] hexArray = cmd.cmdStr.Trim().Split(' ');
-            cmd.cmdLs.Clear();
-            for (int i = 0; i < hexArray.Length; ++i)
-            {
-                if (hexArray[i].Contains('%'))
-                {
-                    if (cmd.cmdLs.ContainsKey(hexArray[i]))
-                    {
-                        cmd.cmdLs[hexArray[i]] = (byte)(cmd.cmdLs[hexArray[i]] + 1);
-                    }
-                    else
-                    {
-                        cmd.cmdLs.Add(hexArray[i], 1);
-                    }
-                    // chksum(1,2)//数组下标
-                    if (hexArray[i].Contains("chksum"))
-                    {
-                        if (!cmd.cmdLs.ContainsKey("_chksum_param1"))
-                        {
-                            string[] x = getFuncParam(hexArray[i]);
-                            cmd.cmdLs.Add("_chksum_param1", Convert.ToByte(x[0]));
-                            cmd.cmdLs.Add("_chksum_param2", Convert.ToByte(x[1]));
-                        }
-                    }
-                    else if (hexArray[i].Contains("chkxor"))
-                    {
-                        if (!cmd.cmdLs.ContainsKey("_chkxor_param1"))
-                        {
-                            string[] x = getFuncParam(hexArray[i]);
-                            cmd.cmdLs.Add("_chkxor_param1", Convert.ToByte(x[0]));
-                            cmd.cmdLs.Add("_chkxor_param2", Convert.ToByte(x[1]));
-                        }
-                    }
-                }
-            }
-        }
+        
         private void cmdList_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex != -1 && e.ColumnIndex != -1)
@@ -1151,7 +1113,7 @@ namespace myPort
         {
             return cmdList;
         }
-        
+
         private string[] getFuncParam(string x)
         {
             string temp = x.Replace(" ", "");
@@ -1176,7 +1138,7 @@ namespace myPort
             if (cmdList.Columns[e.ColumnIndex].Name == "cmdSend" && parse.cmdObjs.Count > 0 && e.RowIndex >= 0)
             {
                 //说明点击的列是DataGridViewButtonColumn列
-                parse.sendCmd(parse.cmdObjs[e.RowIndex],高位在前ToolStripMenuItem.Checked);
+                parse.sendCmd(parse.cmdObjs[e.RowIndex], 高位在前ToolStripMenuItem.Checked);
                 if (parse.cmdObjs[e.RowIndex].timerNeed)
                 {
                     if (parse.cmdObjs[e.RowIndex].timerIsStart == false)
@@ -1190,7 +1152,7 @@ namespace myPort
         {
             private void TimerUp(object sender, EventArgs e)
             {
-                parent.parse.sendCmd(this,parent.高位在前ToolStripMenuItem.Checked);
+                parent.parse.sendCmd(this, parent.高位在前ToolStripMenuItem.Checked);
             }
             public string cmdName { get; set; }
             public string cmdStr { get; set; }
@@ -1200,6 +1162,7 @@ namespace myPort
             public bool timerNeed { get; set; }
             public bool timerIsStart { get; set; }
             public Form1 parent;
+            public List<CmdPerParse> array { get; set; }
             public CmdObj(Form1 parent)
             {
                 this.parent = parent;
@@ -1209,7 +1172,6 @@ namespace myPort
                 cmdTimer.Tick += new EventHandler(TimerUp);
                 cmdTimer.Interval = 1000;
                 time = 1000;
-
             }
         }
         #endregion
@@ -1226,12 +1188,12 @@ namespace myPort
         // 服务端
         private void uiButton3_Click(object sender, EventArgs e)
         {
-            if(uiButton3.Text.Equals("侦听"))
+            if (uiButton3.Text.Equals("侦听"))
             {
                 IPAddress ip;
                 if (IPAddress.TryParse(serIP.Text, out ip))
                 {
-                    
+
                     tcpServer = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);//创建socket对象
                     tcpServer.Bind(new IPEndPoint(ip, serPort.IntValue));//绑定IP和申请端口
 
@@ -1246,7 +1208,7 @@ namespace myPort
                 {
                     MessageBox.Show("非法IP");
                 }
-                
+
             }
             else if (uiButton3.Text.Equals("断开"))
             {
@@ -1277,7 +1239,7 @@ namespace myPort
         //客户端
         private void uiButton5_Click(object sender, EventArgs e)
         {
-            if(uiButton5.Text.Equals("连接"))
+            if (uiButton5.Text.Equals("连接"))
             {
                 IPAddress ip;
                 if (IPAddress.TryParse(tcpCliIP.Text, out ip))
@@ -1310,14 +1272,14 @@ namespace myPort
             }
             else
             {
-                if(tcpClient != null)
+                if (tcpClient != null)
                 {
                     tcpClient.Close();
                 }
-                
+
                 uiButton5.Text = "连接";
             }
-            
+
 
         }
         void tcpServerThread()
@@ -1331,11 +1293,11 @@ namespace myPort
                     Client client = new Client(clientSocket, this);
                     clientList.Add(client);
                 }
-                catch(Exception exp)
+                catch (Exception exp)
                 {
                     MessageBox.Show(exp.Message);
                 }
-                
+
             }
         }
         public class Client
@@ -1345,7 +1307,7 @@ namespace myPort
             private Form1 form;
             public string ip = "";
             private byte[] data = new byte[1024];
-            public Client(Socket socket,Form1 form)
+            public Client(Socket socket, Form1 form)
             {
                 this.form = form;
                 clientSocket = socket;
@@ -1368,7 +1330,7 @@ namespace myPort
                             form.recData(vs);
                         }
                     }
-                    catch(Exception exp)
+                    catch (Exception exp)
                     {
                         MessageBox.Show(exp.Message);
                     }
@@ -1441,14 +1403,22 @@ namespace myPort
             }
             else
             {
-                serialPort.BaudRate = Convert.ToInt32(baudCombo.Text);
-                serialPort.PortName = cmbPort.Text;
-                serialPort.Open();
-                isReceiving = false;
-                cmbPort.Enabled = false;
-                baudCombo.Enabled = false;
-                serialPort.ReadTimeout = 5;
-                button1.Text = "关闭串口";
+                try
+                {
+                    serialPort.BaudRate = Convert.ToInt32(baudCombo.Text);
+                    serialPort.PortName = cmbPort.Text;
+                    serialPort.Open();
+                    isReceiving = false;
+                    cmbPort.Enabled = false;
+                    baudCombo.Enabled = false;
+                    serialPort.ReadTimeout = 5;
+                    button1.Text = "关闭串口";
+                }
+                catch(Exception exp)
+                {
+                    MessageBox.Show(exp.Message);
+                }
+                
             }
         }
         string byteArrayToString(byte[] vs)
@@ -1488,14 +1458,11 @@ namespace myPort
                 {
                     recData(vs);
                 }));
-
-
             }
             catch (Exception exp)
             {
                 MessageBox.Show(exp.Message);
             }
-
             finally
             {
                 isReceiving = false;/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
@@ -1536,7 +1503,6 @@ namespace myPort
                     {
                         vs = pyScript.dataSend(vs);
                     }
-
                 }
                 catch (Exception exp)
                 {
@@ -1573,10 +1539,11 @@ namespace myPort
         }
 
 
-        #endregion
+
 
         #endregion
 
-        
+        #endregion
+
     }
 }

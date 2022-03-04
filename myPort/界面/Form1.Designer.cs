@@ -84,8 +84,17 @@ namespace myPort
             this.sendName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sendValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cmdList = new Sunny.UI.UIDataGridView();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cmdSend = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.cmdTimer = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.cmdTimerParam = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.LineChart = new Sunny.UI.UILineChart();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.移至开始ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.移至最新ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.缩小ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uiButton9 = new Sunny.UI.UIButton();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.socketCliPanel = new System.Windows.Forms.Panel();
@@ -118,11 +127,6 @@ namespace myPort
             this.uiTitlePanel2 = new Sunny.UI.UITitlePanel();
             this.recBox = new Sunny.UI.UITextBox();
             this.serialPort = new System.IO.Ports.SerialPort(this.components);
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cmdSend = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.cmdTimer = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.cmdTimerParam = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sendObjBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.recObjBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.menuStrip1.SuspendLayout();
@@ -138,6 +142,7 @@ namespace myPort
             this.splitContainer4.Panel1.SuspendLayout();
             this.splitContainer4.Panel2.SuspendLayout();
             this.splitContainer4.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
@@ -487,6 +492,7 @@ namespace myPort
             this.recList.ShowGridLine = true;
             this.recList.Size = new System.Drawing.Size(150, 333);
             this.recList.TabIndex = 3;
+            this.recList.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.recList_CellEndEdit);
             this.recList.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.recList_CellValueChanged);
             this.recList.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.recList_RowsRemoved);
             this.recList.Resize += new System.EventHandler(this.recList_Resize);
@@ -570,6 +576,7 @@ namespace myPort
             this.sendList.ShowGridLine = true;
             this.sendList.Size = new System.Drawing.Size(148, 333);
             this.sendList.TabIndex = 2;
+            this.sendList.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.sendList_CellEndEdit);
             this.sendList.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.sendList_CellValueChanged);
             this.sendList.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.sendList_RowsRemoved);
             this.sendList.Resize += new System.EventHandler(this.sendList_Resize);
@@ -646,6 +653,58 @@ namespace myPort
             this.cmdList.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.cmdList_RowsRemoved);
             this.cmdList.Resize += new System.EventHandler(this.cmdList_Resize);
             // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.DataPropertyName = "sendName";
+            this.dataGridViewTextBoxColumn1.HeaderText = "命令名";
+            this.dataGridViewTextBoxColumn1.MinimumWidth = 6;
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.ReadOnly = true;
+            this.dataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.dataGridViewTextBoxColumn1.Width = 125;
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            this.dataGridViewTextBoxColumn2.DataPropertyName = "sendValue";
+            this.dataGridViewTextBoxColumn2.HeaderText = "命令格式";
+            this.dataGridViewTextBoxColumn2.MinimumWidth = 6;
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            this.dataGridViewTextBoxColumn2.ReadOnly = true;
+            this.dataGridViewTextBoxColumn2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.dataGridViewTextBoxColumn2.Width = 125;
+            // 
+            // cmdSend
+            // 
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle13.NullValue = "发送";
+            this.cmdSend.DefaultCellStyle = dataGridViewCellStyle13;
+            this.cmdSend.HeaderText = "发送";
+            this.cmdSend.MinimumWidth = 6;
+            this.cmdSend.Name = "cmdSend";
+            this.cmdSend.ReadOnly = true;
+            this.cmdSend.Text = "发送";
+            this.cmdSend.ToolTipText = "发送";
+            this.cmdSend.UseColumnTextForButtonValue = true;
+            this.cmdSend.Width = 125;
+            // 
+            // cmdTimer
+            // 
+            this.cmdTimer.HeaderText = "连发";
+            this.cmdTimer.MinimumWidth = 6;
+            this.cmdTimer.Name = "cmdTimer";
+            this.cmdTimer.ReadOnly = true;
+            this.cmdTimer.Width = 125;
+            // 
+            // cmdTimerParam
+            // 
+            dataGridViewCellStyle14.NullValue = "1000";
+            this.cmdTimerParam.DefaultCellStyle = dataGridViewCellStyle14;
+            this.cmdTimerParam.HeaderText = " 间隔";
+            this.cmdTimerParam.MinimumWidth = 6;
+            this.cmdTimerParam.Name = "cmdTimerParam";
+            this.cmdTimerParam.ReadOnly = true;
+            this.cmdTimerParam.Width = 125;
+            // 
             // splitContainer4
             // 
             this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -667,6 +726,7 @@ namespace myPort
             // 
             // LineChart
             // 
+            this.LineChart.ContextMenuStrip = this.contextMenuStrip1;
             this.LineChart.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LineChart.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(244)))), ((int)(((byte)(244)))));
             this.LineChart.Font = new System.Drawing.Font("微软雅黑", 12F);
@@ -678,6 +738,37 @@ namespace myPort
             this.LineChart.Style = Sunny.UI.UIStyle.Custom;
             this.LineChart.TabIndex = 5;
             this.LineChart.MouseEnter += new System.EventHandler(this.LineChart_MouseEnter);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.移至开始ToolStripMenuItem,
+            this.移至最新ToolStripMenuItem,
+            this.缩小ToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(139, 76);
+            // 
+            // 移至开始ToolStripMenuItem
+            // 
+            this.移至开始ToolStripMenuItem.Name = "移至开始ToolStripMenuItem";
+            this.移至开始ToolStripMenuItem.Size = new System.Drawing.Size(138, 24);
+            this.移至开始ToolStripMenuItem.Text = "移至开始";
+            this.移至开始ToolStripMenuItem.Click += new System.EventHandler(this.移至开始ToolStripMenuItem_Click);
+            // 
+            // 移至最新ToolStripMenuItem
+            // 
+            this.移至最新ToolStripMenuItem.Name = "移至最新ToolStripMenuItem";
+            this.移至最新ToolStripMenuItem.Size = new System.Drawing.Size(138, 24);
+            this.移至最新ToolStripMenuItem.Text = "移至最新";
+            this.移至最新ToolStripMenuItem.Click += new System.EventHandler(this.移至最新ToolStripMenuItem_Click);
+            // 
+            // 缩小ToolStripMenuItem
+            // 
+            this.缩小ToolStripMenuItem.Name = "缩小ToolStripMenuItem";
+            this.缩小ToolStripMenuItem.Size = new System.Drawing.Size(138, 24);
+            this.缩小ToolStripMenuItem.Text = "缩小";
+            this.缩小ToolStripMenuItem.Click += new System.EventHandler(this.缩小ToolStripMenuItem_Click);
             // 
             // uiButton9
             // 
@@ -1137,58 +1228,6 @@ namespace myPort
             // 
             this.serialPort.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort_DataReceived);
             // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.DataPropertyName = "sendName";
-            this.dataGridViewTextBoxColumn1.HeaderText = "命令名";
-            this.dataGridViewTextBoxColumn1.MinimumWidth = 6;
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.ReadOnly = true;
-            this.dataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.dataGridViewTextBoxColumn1.Width = 125;
-            // 
-            // dataGridViewTextBoxColumn2
-            // 
-            this.dataGridViewTextBoxColumn2.DataPropertyName = "sendValue";
-            this.dataGridViewTextBoxColumn2.HeaderText = "命令格式";
-            this.dataGridViewTextBoxColumn2.MinimumWidth = 6;
-            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            this.dataGridViewTextBoxColumn2.ReadOnly = true;
-            this.dataGridViewTextBoxColumn2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.dataGridViewTextBoxColumn2.Width = 125;
-            // 
-            // cmdSend
-            // 
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle13.NullValue = "发送";
-            this.cmdSend.DefaultCellStyle = dataGridViewCellStyle13;
-            this.cmdSend.HeaderText = "发送";
-            this.cmdSend.MinimumWidth = 6;
-            this.cmdSend.Name = "cmdSend";
-            this.cmdSend.ReadOnly = true;
-            this.cmdSend.Text = "发送";
-            this.cmdSend.ToolTipText = "发送";
-            this.cmdSend.UseColumnTextForButtonValue = true;
-            this.cmdSend.Width = 125;
-            // 
-            // cmdTimer
-            // 
-            this.cmdTimer.HeaderText = "连发";
-            this.cmdTimer.MinimumWidth = 6;
-            this.cmdTimer.Name = "cmdTimer";
-            this.cmdTimer.ReadOnly = true;
-            this.cmdTimer.Width = 125;
-            // 
-            // cmdTimerParam
-            // 
-            dataGridViewCellStyle14.NullValue = "1000";
-            this.cmdTimerParam.DefaultCellStyle = dataGridViewCellStyle14;
-            this.cmdTimerParam.HeaderText = " 间隔";
-            this.cmdTimerParam.MinimumWidth = 6;
-            this.cmdTimerParam.Name = "cmdTimerParam";
-            this.cmdTimerParam.ReadOnly = true;
-            this.cmdTimerParam.Width = 125;
-            // 
             // sendObjBindingSource
             // 
             this.sendObjBindingSource.DataSource = typeof(myPort.SendObj);
@@ -1226,6 +1265,7 @@ namespace myPort
             this.splitContainer4.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
             this.splitContainer4.ResumeLayout(false);
+            this.contextMenuStrip1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
@@ -1328,6 +1368,10 @@ namespace myPort
         private System.Windows.Forms.DataGridViewButtonColumn cmdSend;
         private System.Windows.Forms.DataGridViewCheckBoxColumn cmdTimer;
         private System.Windows.Forms.DataGridViewTextBoxColumn cmdTimerParam;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem 移至开始ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 移至最新ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 缩小ToolStripMenuItem;
     }
 }
 

@@ -35,7 +35,14 @@ namespace myPort
 
         private void uiButton2_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Sunny.UI.UIDataGridView ls = form.getParsingList();
+            if (string.IsNullOrWhiteSpace(proName.Text) || string.IsNullOrWhiteSpace(proStr.Text))
+            {
+                form.ls.RemoveAt(index);
+                ls.Rows.RemoveAt(index);
+                this.Close();
+                return;
+            }
         }
 
         private void uiButton1_Click(object sender, EventArgs e)
@@ -57,8 +64,11 @@ namespace myPort
             ls.Rows[index].Cells[1].Value = form.ls[index].parsingStr;
             ls.Rows[index].Cells[2].Value = form.ls[index].parsingCmd;
             ls.Rows[index].Cells[3].Value = form.ls[index].parsingCmdName;
-            ls.EndEdit();
-            this.Close();
+            if(form.parent.parse.parse_rec_per_prase(obj))
+            {
+                ls.EndEdit();
+                this.Close();
+            }
         }
     }
 }

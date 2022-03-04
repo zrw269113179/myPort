@@ -13,7 +13,7 @@ namespace myPort
     public partial class Protocols : Sunny.UI.UIForm
     {
         public List<ParsingObj> ls;
-        private Form1 parent;
+        public Form1 parent;
         public Protocols()
         {
             InitializeComponent();
@@ -43,7 +43,7 @@ namespace myPort
 
         private void Protocols_FormClosing(object sender, FormClosingEventArgs e)
         {
-            parent.parse.parsingObjs = ls;
+
         }
 
 
