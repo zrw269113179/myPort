@@ -89,7 +89,7 @@ namespace myPort
             foreach (ParsingObj obj in parsingObjs)
             {
                 int allLen = 0;
-                int value = 0;
+                long value = 0;
                 for (int i = 0; i < obj.array.Count; ++i)
                 {
                     if (obj.array[i].rec != null)// 变量匹配
@@ -100,12 +100,12 @@ namespace myPort
                             if (bigen)// 大小端
                             {
                                 obj.array[i].rec.tempValue = obj.array[i].rec.tempValue << 8;
-                                obj.array[i].rec.tempValue += data[i + j];
+                                obj.array[i].rec.tempValue += data[allLen + j];
 
                             }
                             else
                             {
-                                obj.array[i].rec.tempValue += data[i + j] << (8 * obj.array[i].rec.tempIndex);
+                                obj.array[i].rec.tempValue += data[allLen + j] << (8 * obj.array[i].rec.tempIndex);
                                 obj.array[i].rec.tempIndex++;
                             }
                         }
@@ -337,9 +337,6 @@ namespace myPort
                 byte num = 0;
                 if (obj.array[i].send != null)
                 {
-
-                    
-
                     for (int j = 0; j < obj.array[i].valueLen; j++)
                     {
                         if (bigEn)

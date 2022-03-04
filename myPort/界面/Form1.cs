@@ -562,7 +562,7 @@ namespace myPort
                 option.Series.TryRemove(str, out series);
             }
         }
-        private void chart_add_point(string str, int value)
+        private void chart_add_point(string str, long value)
         {
             if (!option.Series.ContainsKey(str))
             {

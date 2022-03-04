@@ -10,18 +10,18 @@ namespace myPort
     {
         public string recSeriseName { get; set; }
         public string recName { get; set; }
-        public int recValue { get; set; }
+        public long recValue { get; set; }
         public bool recIsShow { get; set; }
         public bool valueChanged { get; set; }
-        public int tempValue { get; set; }
+        public long tempValue { get; set; }
         public int tempIndex { get; set; }
         
     }
     public class SendObj
     {
         public string sendName { get; set; }
-        public int sendValue { get; set; }
-        public int tempValue { get; set; }
+        public long sendValue { get; set; }
+        public long tempValue { get; set; }
         public int tempIndex { get; set; }
     }
 
@@ -29,7 +29,7 @@ namespace myPort
     {
         public RecObj rec { get; set; }
         public string scriptPath { get; set; }
-        public int num { get; set; }
+        public long num { get; set; }
         public int valueLen;
         public string[] pList {get; set; }
         public PerParse()
@@ -80,7 +80,7 @@ namespace myPort
     {
         public CmdPerParse cmdFunc { get; set; }
         public int arrIndex { get; set; }
-        public int value { get; set; }
+        public long value { get; set; }
     }
 
 }

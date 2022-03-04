@@ -57,8 +57,8 @@ namespace myPort
             index = 0;
             show = 0;
         }
-        public delegate void SeriesAddPointDelegate(UILineChart txtInfo, string x, int value);
-        static public void AddSeriesPoint(UILineChart txtInfo, string x, int value)
+        public delegate void SeriesAddPointDelegate(UILineChart txtInfo, string x, long value);
+        static public void AddSeriesPoint(UILineChart txtInfo, string x, long value)
         {
             if (txtInfo == null)
             {
@@ -66,7 +66,7 @@ namespace myPort
             }
             if (txtInfo.InvokeRequired)//判断是否跨线程请求
             {
-                SeriesAddPointDelegate myDelegate = delegate (UILineChart a, string b, int c) {
+                SeriesAddPointDelegate myDelegate = delegate (UILineChart a, string b, long c) {
                     
                     
                     if (index < a.Option.Series[b].DataCount + 1)
