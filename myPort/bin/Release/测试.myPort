@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <setup>
   <dataformat format="True" />
-  <script path="F:\vs2019 project\myPort_SunnyUI\myPort\bin\Release\data.py" needScript="False" />
+  <script path="" needScript="False" />
   <UI recHex="True" sendHex="True" recUI="True" setUI="True" chartUI="True" cmdUI="True" configUI="True" />
   <serial baud="115200" com="COM2" />
   <client IP="127.0.0.1" port="777" />
