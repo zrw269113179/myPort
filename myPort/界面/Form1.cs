@@ -22,8 +22,6 @@ namespace myPort
 {
     public partial class Form1 : Sunny.UI.UIForm
     {
-
-
         public Parse parse;
         public bool isRecHex = true; // 十六进制接收
         public bool isSendHex = true; // 十六进制发送
@@ -59,7 +57,6 @@ namespace myPort
             recList.Columns[2].Width = (int)(0.15 * recList.Width);
 
             recList.AllowUserToAddRows = true;
-            serialPort.ReadTimeout = 500;/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 
             parse = new Parse(this);
 
@@ -145,7 +142,9 @@ namespace myPort
                         try
                         {
                             ScriptEngine pyEngine = Python.CreateEngine();//创建Python解释器对象
-                            pyScript = pyEngine.ExecuteFile(scriptPath);//读取脚本文件
+                            ScriptScope scope = pyEngine.CreateScope();
+                            scope.SetVariable("param", parse.Param);
+                            pyScript = pyEngine.ExecuteFile(scriptPath, scope);//读取脚本文件
                         }
                         catch (Exception exp)
                         {
@@ -381,7 +380,15 @@ namespace myPort
             root.AppendChild(dataFormat);
 
             XmlElement script = document.CreateElement("script");
-            script.SetAttribute("path", scriptPath);
+            if(needScript)
+            {
+                script.SetAttribute("path", scriptPath);
+            }
+            else
+            {
+                script.SetAttribute("path",null);
+            }
+            
             script.SetAttribute("needScript", needScript.ToString());
             root.AppendChild(script);
 
@@ -976,7 +983,7 @@ namespace myPort
 
         #region 数据匹配
 
-        private void recData(byte[] vs)
+        private void recData(byte[] vs,int len)
         {
             if (needScript)
             {
@@ -998,7 +1005,7 @@ namespace myPort
                 }
 
             }
-            string bs = byteArrayToString(vs);
+            string bs = byteArrayToString(vs,len);
             UIControl.AddTextBoxValue(recBox, "<---");
             UIControl.AddTextBoxValue(recBox, bs);
             if (needSave)
@@ -1006,7 +1013,7 @@ namespace myPort
                 writeFile("<---" + bs);
             }
 
-            parse.dataParsing(vs, 高位在前ToolStripMenuItem.Checked);
+            parse.dataParsing(vs,len, 高位在前ToolStripMenuItem.Checked);
         }
 
         #endregion
@@ -1118,15 +1125,7 @@ namespace myPort
             return cmdList;
         }
 
-        private string[] getFuncParam(string x)
-        {
-            string temp = x.Replace(" ", "");
-            int start = x.IndexOf('(');
-            int end = x.IndexOf(')');
-            string sub = x.Substring(start + 1, end - start - 1);
-            return sub.Split(',');
 
-        }
 
         private void cmdList_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
         {
@@ -1139,7 +1138,7 @@ namespace myPort
         private void cmdList_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             //点击button按钮事件
-            if (cmdList.Columns[e.ColumnIndex].Name == "cmdSend" && parse.cmdObjs.Count > 0 && e.RowIndex >= 0)
+            if (cmdList.Columns[e.ColumnIndex].Name == "cmdSend" && parse.cmdObjs.Count > 0 && e.RowIndex >= 0 && e.RowIndex < parse.cmdObjs.Count)
             {
                 //说明点击的列是DataGridViewButtonColumn列
                 parse.sendCmd(parse.cmdObjs[e.RowIndex], 高位在前ToolStripMenuItem.Checked);
@@ -1149,6 +1148,23 @@ namespace myPort
                     {
                         parse.cmdObjs[e.RowIndex].cmdTimer.Start();
                     }
+                }
+            }
+            else if (cmdList.Columns[e.ColumnIndex].Name == "cmdTimer" && parse.cmdObjs.Count > 0 && e.RowIndex >= 0 && e.RowIndex < parse.cmdObjs.Count)
+            {
+                //说明点击的列是DataGridViewButtonColumn列
+                if (parse.cmdObjs[e.RowIndex].timerNeed)
+                {
+                    parse.cmdObjs[e.RowIndex].timerNeed = false;
+                    cmdList.Rows[e.RowIndex].Cells[3].Value = false;
+                    parse.cmdObjs[e.RowIndex].cmdTimer.Stop();
+
+                }
+                else
+                {
+                    parse.cmdObjs[e.RowIndex].timerNeed = true;
+                    cmdList.Rows[e.RowIndex].Cells[3].Value = true;
+                    parse.cmdObjs[e.RowIndex].cmdTimer.Start();
                 }
             }
         }
@@ -1331,7 +1347,7 @@ namespace myPort
                         {
                             byte[] vs = new byte[length];
                             Array.Copy(data, vs, length);
-                            form.recData(vs);
+                            form.recData(vs, length);
                         }
                     }
                     catch (Exception exp)
@@ -1415,7 +1431,7 @@ namespace myPort
                     isReceiving = false;
                     cmbPort.Enabled = false;
                     baudCombo.Enabled = false;
-                    serialPort.ReadTimeout = 5;
+                    //serialPort.ReadTimeout = -1;
                     button1.Text = "关闭串口";
                 }
                 catch(Exception exp)
@@ -1425,14 +1441,14 @@ namespace myPort
                 
             }
         }
-        string byteArrayToString(byte[] vs)
+        string byteArrayToString(byte[] vs,int len)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(DateTime.Now.TimeOfDay.ToString());
             sb.Append(':');
-            foreach (byte b in vs)
+            for(int i = 0; i < len;i++)
             {
-                sb.Append(b.ToString("X2"));
+                sb.Append(vs[i].ToString("X2"));
                 sb.Append(' ');
             }
             sb.AppendLine();
@@ -1448,19 +1464,21 @@ namespace myPort
          */
         private void serialPort_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
         {
+            byte[] vs = new byte[4096];
             try
             {
                 int len = serialPort.BytesToRead;
+                
                 if (len <= 0)
                 {
                     return;
                 }
-                byte[] vs = new byte[len];
+                
                 serialPort.Read(vs, 0, len);
 
                 Task.Factory.StartNew(new Action(() =>
                 {
-                    recData(vs);
+                    recData(vs,len);
                 }));
             }
             catch (Exception exp)
@@ -1532,7 +1550,7 @@ namespace myPort
             {
                 tcpClient.SendMessage(vs);
             }
-            string bs = byteArrayToString(vs);
+            string bs = byteArrayToString(vs,vs.Length);
             UIControl.AddTextBoxValue(recBox, "--->");
             UIControl.AddTextBoxValue(recBox, bs);
             if (needSave)
@@ -1541,10 +1559,6 @@ namespace myPort
             }
 
         }
-
-
-
-
         #endregion
 
         #endregion

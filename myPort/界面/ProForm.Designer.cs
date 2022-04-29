@@ -31,12 +31,12 @@ namespace myPort
         {
             this.proName = new Sunny.UI.UITextBox();
             this.proStr = new Sunny.UI.UITextBox();
-            this.replyName = new Sunny.UI.UITextBox();
             this.uiLabel1 = new Sunny.UI.UILabel();
             this.uiLabel2 = new Sunny.UI.UILabel();
             this.reply = new Sunny.UI.UICheckBox();
             this.uiButton1 = new Sunny.UI.UIButton();
             this.uiButton2 = new Sunny.UI.UIButton();
+            this.replyName = new Sunny.UI.UIComboBox();
             this.SuspendLayout();
             // 
             // proName
@@ -71,22 +71,6 @@ namespace myPort
             this.proStr.TabIndex = 1;
             this.proStr.Text = "uiTextBox2";
             this.proStr.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // replyName
-            // 
-            this.replyName.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.replyName.FillColor = System.Drawing.Color.White;
-            this.replyName.Font = new System.Drawing.Font("微软雅黑", 12F);
-            this.replyName.Location = new System.Drawing.Point(123, 309);
-            this.replyName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.replyName.Maximum = 2147483647D;
-            this.replyName.Minimum = -2147483648D;
-            this.replyName.MinimumSize = new System.Drawing.Size(1, 1);
-            this.replyName.Name = "replyName";
-            this.replyName.Size = new System.Drawing.Size(569, 34);
-            this.replyName.TabIndex = 2;
-            this.replyName.Text = "uiTextBox3";
-            this.replyName.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // uiLabel1
             // 
@@ -144,18 +128,33 @@ namespace myPort
             this.uiButton2.Text = "取消";
             this.uiButton2.Click += new System.EventHandler(this.uiButton2_Click);
             // 
+            // replyName
+            // 
+            this.replyName.DataSource = null;
+            this.replyName.FillColor = System.Drawing.Color.White;
+            this.replyName.Font = new System.Drawing.Font("微软雅黑", 12F);
+            this.replyName.Location = new System.Drawing.Point(123, 309);
+            this.replyName.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.replyName.MinimumSize = new System.Drawing.Size(63, 0);
+            this.replyName.Name = "replyName";
+            this.replyName.Padding = new System.Windows.Forms.Padding(0, 0, 30, 2);
+            this.replyName.Size = new System.Drawing.Size(568, 29);
+            this.replyName.TabIndex = 9;
+            this.replyName.Text = "uiComboBox1";
+            this.replyName.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // ProForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 27F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(695, 384);
             this.ControlBox = false;
+            this.Controls.Add(this.replyName);
             this.Controls.Add(this.uiButton2);
             this.Controls.Add(this.uiButton1);
             this.Controls.Add(this.reply);
             this.Controls.Add(this.uiLabel2);
             this.Controls.Add(this.uiLabel1);
-            this.Controls.Add(this.replyName);
             this.Controls.Add(this.proStr);
             this.Controls.Add(this.proName);
             this.MaximizeBox = false;
@@ -171,11 +170,11 @@ namespace myPort
 
         private Sunny.UI.UITextBox proName;
         private Sunny.UI.UITextBox proStr;
-        private Sunny.UI.UITextBox replyName;
         private Sunny.UI.UILabel uiLabel1;
         private Sunny.UI.UILabel uiLabel2;
         private Sunny.UI.UICheckBox reply;
         private Sunny.UI.UIButton uiButton1;
         private Sunny.UI.UIButton uiButton2;
+        private Sunny.UI.UIComboBox replyName;
     }
 }

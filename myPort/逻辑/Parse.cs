@@ -18,11 +18,37 @@ namespace myPort
         public List<RecObj> recObjs = new List<RecObj>();
         public List<CmdObj> cmdObjs = new List<CmdObj>();
         public List<SendObj> sendObjs = new List<SendObj>();
+        public Dictionary<string, object> Param = new Dictionary<string, object>();
+        
+        ScriptEngine pyEngine = Python.CreateEngine();//创建Python解释器对象
+        ScriptScope scope;
+
         public Parse(Form1 form)
         {
             this.form = form;
+            scope = pyEngine.CreateScope();
         }
+        private string[] getFuncParam(string x)
+        {
+            string temp = x.Replace(" ", "");
+            int start = x.IndexOf('(');
+            if(start >=0)
+            {
+                try
+                {
+                    int end = x.IndexOf(')');
+                    string sub = x.Substring(start + 1, end - start - 1);
+                    return sub.Split(',');
+                }
+                catch
+                {
+                    MessageBox.Show("$函数匹配出错");
+                }
+                
+            }
+            return null;
 
+        }
         #region 接收相关
         private void recTempClear(List<RecObj> ls)
         {
@@ -83,7 +109,8 @@ namespace myPort
         }
         #endregion
         // 接收匹配
-        public void dataParsing(byte[] data, bool bigen)
+        
+        public void dataParsing(byte[] data,int len, bool bigen)
         {
             recTempClear(recObjs);
             foreach (ParsingObj obj in parsingObjs)
@@ -115,8 +142,9 @@ namespace myPort
                     {
                         try
                         {
-                            ScriptEngine pyEngine = Python.CreateEngine();//创建Python解释器对象
-                            dynamic pyFunc = pyEngine.ExecuteFile(obj.array[i].scriptPath);//读取脚本文件
+                            Dictionary<string, object> ParamTemp = new Dictionary<string, object>(Param);
+                            scope.SetVariable("param", ParamTemp);
+                            dynamic pyFunc = pyEngine.ExecuteFile(obj.array[i].scriptPath,scope);//读取脚本文件         
                             if (pyFunc != null)
                             {
                                 int pyValue = pyFunc.main(data, obj.array[i].pList);
@@ -161,8 +189,9 @@ namespace myPort
                     }
                 }
             unparse:
-                if (allLen == data.Length)// 匹配成功
+                if (allLen == len)// 匹配成功
                 {
+                    scope.TryGetVariable("param", out Param);
                     recTempApply(recObjs);
                     if (obj.parsingCmd)
                     {
@@ -191,16 +220,15 @@ namespace myPort
         {
             for (int i = 0; i < ls.Count; ++i)
             {
-
                 if (ls[i].valueChanged)
                 {
                     ls[i].recValue = ls[i].tempValue;
-                    // 如果接收发送变量名称相同,则发送变量值变为接收变量的值
-                    SendObj send = findSendObjByName(sendObjs, ls[i].recName);
-                    if (send != null)
-                    {
-                        send.sendValue = ls[i].recValue;
-                    }
+                    //// 如果接收发送变量名称相同,则发送变量值变为接收变量的值
+                    //SendObj send = findSendObjByName(sendObjs, ls[i].recName);
+                    //if (send != null)
+                    //{
+                    //    send.sendValue = ls[i].recValue;
+                    //}
                     form.update_rec_value(ls[i],i);
                 }
             }
@@ -263,18 +291,10 @@ namespace myPort
                     {
                         name = nameTemp;
                     }
-                    int paramIndex = name.IndexOf('(');
-                    string[] paramList = null;
-                    if (paramIndex >= 0)
-                    {
-                        name = name.Substring(0, paramIndex);
-                        int l = nameTemp.IndexOf('(');
-                        int r = nameTemp.IndexOf(')');
-                        string param = nameTemp.Substring(l + 1, r - l - 1);
-                        paramList = param.Split(',');
-                    }
+                    string[] paramList = getFuncParam(name);
+                    string funcName = name.Substring(0, name.IndexOf('('));
                     // 执行脚本
-                    FileInfo f = find_py(name);
+                    FileInfo f = find_py(funcName);
 
                     if (f != null)
                     {
@@ -322,7 +342,7 @@ namespace myPort
         }
 
         #endregion
-        
+
         #region 发送相关
         // 发送命令
         public void sendCmd(CmdObj obj, bool bigEn)
@@ -383,11 +403,14 @@ namespace myPort
             {
                 try
                 {
-                    ScriptEngine pyEngine = Python.CreateEngine();//创建Python解释器对象
-                    dynamic pyFunc = pyEngine.ExecuteFile(funcObj.cmdFunc.scriptPath);//读取脚本文件
+                    //ScriptEngine pyEngine = Python.CreateEngine();//创建Python解释器对象
+                    //ScriptScope scope = pyEngine.CreateScope();
+                    scope.SetVariable("param", Param);     
+                    dynamic pyFunc = pyEngine.ExecuteFile(funcObj.cmdFunc.scriptPath, scope);//读取脚本文件
                     if (pyFunc != null)
                     {
                         int value = pyFunc.main(vs.ToArray(), funcObj.cmdFunc.pList);
+                        scope.TryGetVariable("param",out Param);
                         for (int j = 0; j < funcObj.cmdFunc.valueLen; j++)
                         {
                             byte num = 0;
@@ -482,18 +505,10 @@ namespace myPort
                     {
                         name = nameTemp;
                     }
-                    int paramIndex = name.IndexOf('(');
-                    string[] paramList = null;
-                    if (paramIndex >= 0)
-                    {
-                        name = name.Substring(0, paramIndex);
-                        int l = nameTemp.IndexOf('(');
-                        int r = nameTemp.IndexOf(')');
-                        string param = nameTemp.Substring(l + 1, r - l - 1);
-                        paramList = param.Split(',');
-                    }
+                    string[] paramList = getFuncParam(name);
+                    string funcName = name.Substring(0,name.IndexOf('('));
                     // 执行脚本
-                    FileInfo f = find_py(name);
+                    FileInfo f = find_py(funcName);
 
                     if (f != null)
                     {

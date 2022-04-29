@@ -1,16 +1,22 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <setup>
   <dataformat format="True" />
+  <script path="" needScript="False" />
+  <UI recHex="True" sendHex="True" recUI="True" setUI="True" chartUI="True" cmdUI="True" configUI="True" />
+  <serial baud="9600" com="COM1" />
+  <client IP="127.0.0.1" port="9000" />
+  <service IP="127.0.0.1" port="9000" />
+  <portChoose choose="1" />
   <recList>
     <rec recName="a" recIsShow="False" />
   </recList>
   <parsingList>
-    <parsing parsingName="abc" parsingStr="AA %a" parsingCmd="True" parsingCmdName="re" />
+    <parsing parsingName="abc" parsingStr="AA %a $test()" parsingCmd="True" parsingCmdName="123" />
   </parsingList>
   <sendList>
     <send sendName="a" sendValue="1234" />
   </sendList>
   <cmdList>
-    <cmd cmdName="123" cmdStr="AA %a %a" />
+    <cmd cmdName="123" cmdStr="AA %a %a $test()" time="1000" timerNeed="False" />
   </cmdList>
 </setup>

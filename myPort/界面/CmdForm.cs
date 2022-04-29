@@ -39,9 +39,9 @@ namespace myPort
             {
                 form.parse.cmdObjs.RemoveAt(index);
                 cmdList.Rows.RemoveAt(index);
-                this.Close();
-                return;
             }
+            this.Close();
+            return;
         }
 
         private void uiButton1_Click(object sender, EventArgs e)
